@@ -27,7 +27,104 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.4</version>
+            <version>42.7.5</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.7.5</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>drop-db</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>jdbc:postgresql://localhost:5432/postgres</url>
+                            <username>lorenzo</username>
+                            <password>5432</password>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>
+                                DROP DATABASE IF EXISTS theknife_db;
+                                DROP ROLE IF EXISTS theknife;
+                            </sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-db</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>jdbc:postgresql://localhost:5432/postgres</url>
+                            <username>lorenzo</username>
+                            <password>5432</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/create_database.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-tables</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>jdbc:postgresql://localhost:5432/theknife_db</url>
+                            <username>theknife</username>
+                            <password>password</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/tables/addresses.sql</srcFile>
+                                <srcFile>src/main/resources/db/tables/users.sql</srcFile>
+                                <srcFile>src/main/resources/db/tables/restaurants.sql</srcFile>
+                                <srcFile>src/main/resources/db/tables/favorites.sql</srcFile>
+                                <srcFile>src/main/resources/db/tables/reviews.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate-tables</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>jdbc:theknife://localhost:5432/theknife_db</url>
+                            <username>theknife</username>
+                            <password>password</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/examples/ex_addresses.sql</srcFile>
+                                <srcFile>src/main/resources/db/examples/ex_users.sql</srcFile>
+                                <srcFile>src/main/resources/db/examples/ex_restaurants.sql</srcFile>
+                                <srcFile>src/main/resources/db/examples/ex_favorites.sql</srcFile>
+                                <srcFile>src/main/resources/db/examples/ex_reviews.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
