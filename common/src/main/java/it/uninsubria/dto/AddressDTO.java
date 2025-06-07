@@ -47,6 +47,10 @@ public class AddressDTO implements Serializable {
         this.city = city;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.parseAddress(address);
+    }
+
+    private void parseAddress(String address) {
         try {
             String[] parts = address.split(" ");
             if (parts.length > 1) {
@@ -59,20 +63,25 @@ public class AddressDTO implements Serializable {
             this.houseNumber = null;
         }
     }
+
     /**
      * Constructor with all address information.
      * Useful for full data transfer operations.
      *
      * @param country User's nation of residence
      * @param city User's city of residence
-     * @param address User's street address
-     * @param houseNumber User's house number
+     * @param street User's street of residence
+     * @param houseNumber User's house number of residence
+     * @param latitude User's latitude of residence
+     * @param longitude User's longitude of residence
      */
-    public AddressDTO(String country, String city, String address, String houseNumber) {
+    public AddressDTO(String country, String city, String street, String houseNumber, Double latitude, Double longitude) {
         this.country = country;
         this.city = city;
-        this.street = address;
+        this.street = street;
         this.houseNumber = houseNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Override

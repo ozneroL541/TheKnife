@@ -1,13 +1,23 @@
 package it.uninsubria;
 
 
+import it.uninsubria.server_services.RestaurantServiceImpl;
+import it.uninsubria.server_services.ReviewServiceImpl;
+import it.uninsubria.server_services.UserServiceImpl;
+import it.uninsubria.services.RestaurantService;
+import it.uninsubria.services.ReviewService;
+import it.uninsubria.services.UserService;
+
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 /**
  * Server class for TheKnife application
  * @author Lorenzo Radice
  * @version 1.0.0
  */
-public class Server
-{
+public class Server {
     /** Version of the application */
     private static final String version = "1.0.0";
     /** Application title */
@@ -16,18 +26,34 @@ public class Server
      * Main method for the server
      * @param args command line arguments
      */
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         if (hasOption(args)) {
             return;
         }
         System.out.println(title);
         DBConnection.login(args);
-        if (DBConnection.closeConnection())
-            System.out.println("Connection closed");
-        else
-            System.out.println("Connection not closed");
+        createRMIRegistry();
     }
+
+    /**
+     * Creates the RMI registry and binds the services to it
+     */
+    private static void createRMIRegistry() {
+        try {
+            Registry reg = LocateRegistry.createRegistry(1099);
+            UserService userService = new UserServiceImpl();
+            RestaurantService restaurantService = new RestaurantServiceImpl();
+            ReviewService reviewService = new ReviewServiceImpl();
+
+            reg.rebind("UserService", userService);
+            reg.rebind("RestaurantService", restaurantService);
+            reg.rebind("ReviewService", reviewService);
+
+        }catch (RemoteException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
     /**
      * Check if the user has provided any options and execute the corresponding action
      * @param args command line arguments
@@ -51,10 +77,11 @@ public class Server
      */
     private static void showHelp() {
         final String usage =
-                "Usage: java -jar TheKnifeServer.jar [option|username] [password]\n" +
-                "Options:\n" +
-                "\t-h, --help\t\tShow this help message\n" +
-                "\t-v, --version\t\tShow version information";
+                """
+                        Usage: java -jar TheKnifeServer.jar [option|username] [password]
+                        Options:
+                        \t-h, --help\t\tShow this help message
+                        \t-v, --version\t\tShow version information""";
         System.out.println(usage);
     }
     /**
