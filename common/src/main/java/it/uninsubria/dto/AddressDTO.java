@@ -14,7 +14,7 @@ public class AddressDTO implements Serializable {
     /** Serial version UID for serialization compatibility */
     private static final long serialVersionUID = 1L;
     /** Country of the address */
-    private String nation;
+    private String country;
     /** City of the address */
     private String city;
     /** Street of the address */
@@ -30,21 +30,20 @@ public class AddressDTO implements Serializable {
      * Default constructor.
      * Initializes a completely empty AddressDTO.
      */
-    public AddressDTO() {
-    }
+    public AddressDTO() {}
 
     /**
      * Constructor with some address information.
      * Useful for full data transfer operations.
      *
-     * @param nation nation
+     * @param country nation
      * @param city city
      * @param address address containing street and house number
      * @param latitude latitude
      * @param longitude longitude
      */
-    public AddressDTO(String nation, String city, String address, Double latitude, Double longitude) {
-        this.nation = nation;
+    public AddressDTO(String country, String city, String address, Double latitude, Double longitude) {
+        this.country = country;
         this.city = city;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -52,8 +51,8 @@ public class AddressDTO implements Serializable {
             String[] parts = address.split(" ");
             if (parts.length > 1) {
                 String[] copyOfRange = Arrays.copyOfRange(parts, 1, parts.length);
-                this.street = String.join(" ", copyOfRange).strip().replace("'", "");
-                this.houseNumber = parts[0].strip().replace("'", "");
+                this.street = String.join(" ", copyOfRange).trim().replace("'", "");
+                this.houseNumber = parts[0].trim().replace("'", "");
             }
         } catch (Exception e) {
             this.street = address;
@@ -64,13 +63,13 @@ public class AddressDTO implements Serializable {
      * Constructor with all address information.
      * Useful for full data transfer operations.
      *
-     * @param nation User's nation of residence
+     * @param country User's nation of residence
      * @param city User's city of residence
      * @param address User's street address
      * @param houseNumber User's house number
      */
-    public AddressDTO(String nation, String city, String address, String houseNumber) {
-        this.nation = nation;
+    public AddressDTO(String country, String city, String address, String houseNumber) {
+        this.country = country;
         this.city = city;
         this.street = address;
         this.houseNumber = houseNumber;
@@ -78,7 +77,7 @@ public class AddressDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "nation='" + nation + '\'' +
+        return "nation='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", street='" + street + '\'' +
                 ", houseNumber='" + houseNumber + '\'';
@@ -89,55 +88,90 @@ public class AddressDTO implements Serializable {
      * @return Formatted string containing the full address.
      */
     public String getFullAddress() {
-        return nation + ", " + city + ", " + street + (houseNumber != null ? ", " + houseNumber : "");
+        return country + ", " + city + ", " + street + (houseNumber != null ? ", " + houseNumber : "");
     }
-
     /**
-     * Returns the nation of the address.
-     * @return nation
+     * Getters and Setters for all fields.
+     * These methods allow access to private fields while maintaining encapsulation.
      */
     public String getCountry() {
-        return nation;
+        return country;
     }
-
     /**
-     * Returns the city of the address.
-     * @return city
+     * Sets the country of the address.
+     * @param country Country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    /**
+     * Gets the city of the address.
+     * @return City of the address
      */
     public String getCity() {
-        return this.city;
+        return city;
     }
-
     /**
-     * Returns the street of the address.
-     * @return street
+     * Sets the city of the address.
+     * @param city City to set
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+    /**
+     * Gets the street of the address.
+     * @return Street of the address
      */
     public String getStreet() {
-        return this.street;
+        return street;
     }
-
+/**
+     * Sets the street of the address.
+     * @param street Street to set
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
     /**
-     * Returns the house number
-     * @return houseNumber
+     * Gets the house number of the address.
+     * @return House number of the address
      */
     public String getHouseNumber() {
-        return this.houseNumber;
+        return houseNumber;
     }
-
     /**
-     * Returns the latitude of the address.
-     * @return latitude
+     * Sets the house number of the address.
+     * @param houseNumber House number to set
+     */
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+    /**
+     * Gets the latitude of the address.
+     * @return Latitude of the address
      */
     public Double getLatitude() {
         return latitude;
     }
-
     /**
-     * Returns the longitude of the address.
-     * @return longitude
+     * Sets the latitude of the address.
+     * @param latitude Latitude to set
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+    /**
+     * Gets the longitude of the address.
+     * @return Longitude of the address
      */
     public Double getLongitude() {
         return longitude;
     }
+    /**
+     * Sets the longitude of the address.
+     * @param longitude Longitude to set
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }
-

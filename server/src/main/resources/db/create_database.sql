@@ -2,12 +2,12 @@
 DROP DATABASE IF EXISTS theknife_db;
 DROP ROLE IF EXISTS theknife;
 CREATE ROLE theknife
-    WITH
-    LOGIN
-    ENCRYPTED PASSWORD 'password'
-    CREATEDB;
+WITH
+LOGIN
+ENCRYPTED PASSWORD 'password'
+CREATEDB;
 
 CREATE DATABASE theknife_db
-    WITH
-    OWNER = theknife
-    ENCODING = 'UTF8';
+WITH
+OWNER = theknife
+ENCODING = 'UTF8';

@@ -13,24 +13,29 @@ import java.io.Serializable;
  * @author Lorenzo Radice, 753252, CO
  */
 public class SearchCriteriaDTO implements Serializable {
-
+    /** Serial version UID for serialization compatibility */
     private static final long serialVersionUID = 1L;
-
-    public Double latitude;
-    public Double longitude;
-
-    public CuisineType cuisineType;
-    public Double minPrice;
-    public Double maxPrice;
-    public Boolean deliveryAvailable;
-    public Boolean onlineBookingAvailable;
-    public Double minRating;
+    /** Type of cuisine to filter by */
+    private CuisineType cuisineType;
+    /** Minimum price range in euros */
+    private Double minPrice;
+    /** Maximum price range in euros */
+    private Double maxPrice;
+    /** Whether delivery service should be available */
+    private Boolean deliveryAvailable;
+    /** Whether online booking should be available */
+    private Boolean onlineBookingAvailable;
+    /** Minimum average rating (1-5 scale) */
+    private Integer minRating;
+    /** Geographic latitude for the search */
+    private Double latitude;
+    /** Geographic longitude for the search */
+    private Double longitude;
 
     /**
      * Private constructor used by the Builder.
      */
-    public SearchCriteriaDTO() {
-    }
+    public SearchCriteriaDTO() {}
 
     /**
      * Creates a new Builder instance for constructing a SearchCriteriaDTO.
@@ -73,8 +78,8 @@ public class SearchCriteriaDTO implements Serializable {
          * @return This Builder instance for method chaining
          */
         public Builder coordinates(Double latitude, Double longitude) {
-            criteria.latitude = latitude;
-            criteria.longitude = longitude;
+            criteria.setLatitude(latitude);
+            criteria.setLongitude(longitude);
             return this;
         }
 
@@ -85,7 +90,7 @@ public class SearchCriteriaDTO implements Serializable {
          * @return This Builder instance for method chaining
          */
         public Builder cuisineType(CuisineType cuisineType) {
-            criteria.cuisineType = cuisineType;
+            criteria.setCuisineType(cuisineType);
             return this;
         }
 
@@ -105,8 +110,8 @@ public class SearchCriteriaDTO implements Serializable {
                 throw new IllegalArgumentException("Maximum price must be greater than or equal to minimum price");
             }
 
-            criteria.minPrice = minPrice;
-            criteria.maxPrice = maxPrice;
+            criteria.setMinPrice(minPrice);
+            criteria.setMaxPrice(maxPrice);
             return this;
         }
 
@@ -117,7 +122,7 @@ public class SearchCriteriaDTO implements Serializable {
          * @return This Builder instance for method chaining
          */
         public Builder deliveryAvailable(Boolean available) {
-            criteria.deliveryAvailable = available;
+            criteria.setDeliveryAvailable(available);
             return this;
         }
 
@@ -128,7 +133,7 @@ public class SearchCriteriaDTO implements Serializable {
          * @return This Builder instance for method chaining
          */
         public Builder onlineBookingAvailable(Boolean available) {
-            criteria.onlineBookingAvailable = available;
+            criteria.setOnlineBookingAvailable(available);
             return this;
         }
 
@@ -138,9 +143,9 @@ public class SearchCriteriaDTO implements Serializable {
          * @param rating Minimum average rating (1-5 scale)
          * @return This Builder instance for method chaining
          */
-        public Builder minRating(Double rating) {
-            if (rating != null && rating >= 1.0 && rating <= 5.0) {
-                criteria.minRating = rating;
+        public Builder minRating(Integer rating) {
+            if (rating != null && rating >= 1 && rating <= 5) {
+                criteria.setMinRating(rating);
             }
             return this;
         }
@@ -152,7 +157,7 @@ public class SearchCriteriaDTO implements Serializable {
          * @throws IllegalStateException if mandatory coordinates are not provided
          */
         public SearchCriteriaDTO build() {
-            if (criteria.latitude == null || criteria.longitude == null) {
+            if (criteria.getLatitude() == null || criteria.getLongitude() == null) {
                 throw new IllegalStateException("Coordinates (latitude and longitude) are mandatory for search criteria");
             }
             return criteria;
@@ -162,13 +167,10 @@ public class SearchCriteriaDTO implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SearchCriteriaDTO{");
-
         sb.append("coordinates=[").append(latitude).append(", ").append(longitude).append("]");
-
         if (cuisineType != null) {
             sb.append(", cuisineType=").append(cuisineType);
         }
-
         if (minPrice != null || maxPrice != null) {
             sb.append(", priceRange=[");
             sb.append(minPrice != null ? minPrice : "any");
@@ -176,20 +178,128 @@ public class SearchCriteriaDTO implements Serializable {
             sb.append(maxPrice != null ? maxPrice : "any");
             sb.append("]");
         }
-
         if (deliveryAvailable != null) {
             sb.append(", deliveryAvailable=").append(deliveryAvailable);
         }
-
         if (onlineBookingAvailable != null) {
             sb.append(", onlineBookingAvailable=").append(onlineBookingAvailable);
         }
-
         if (minRating != null) {
             sb.append(", minRating=").append(minRating);
         }
-
         sb.append('}');
         return sb.toString();
+    }
+    /**
+     * Gets the cuisine type filter.
+     * @return The type of cuisine to filter by
+     */
+    public CuisineType getCuisineType() {
+        return cuisineType;
+    }
+    /**
+     * Sets the cuisine type filter.
+     * @param cuisineType The type of cuisine to filter by
+     */
+    public void setCuisineType(CuisineType cuisineType) {
+        this.cuisineType = cuisineType;
+    }
+    /**
+     * Gets the minimum price range in euros.
+     * @return Minimum price in euros, or null if not set
+     */
+    public Double getMinPrice() {
+        return minPrice;
+    }
+    /**
+     * Sets the minimum price range in euros.
+     * @param minPrice Minimum price in euros, or null if not set
+     */
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
+    /**
+     * Gets the maximum price range in euros.
+     * @return Maximum price in euros, or null if not set
+     */
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
+    /**
+     * Sets the maximum price range in euros.
+     * @param maxPrice Maximum price in euros, or null if not set
+     */
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+    /**
+     * Gets whether delivery service should be available.
+     * @return True if delivery is available, false otherwise, or null if not specified
+     */
+    public Boolean getDeliveryAvailable() {
+        return deliveryAvailable;
+    }
+    /**
+     * Sets whether delivery service should be available.
+     * @param deliveryAvailable True if delivery is available, false otherwise
+     */
+    public void setDeliveryAvailable(Boolean deliveryAvailable) {
+        this.deliveryAvailable = deliveryAvailable;
+    }
+    /**
+     * Gets whether online booking should be available.
+     * @return True if online booking is available, false otherwise, or null if not specified
+     */
+    public Boolean getOnlineBookingAvailable() {
+        return onlineBookingAvailable;
+    }
+    /**
+     * Sets whether online booking should be available.
+     * @param onlineBookingAvailable True if online booking is available, false otherwise
+     */
+    public void setOnlineBookingAvailable(Boolean onlineBookingAvailable) {
+        this.onlineBookingAvailable = onlineBookingAvailable;
+    }
+    /**
+     * Gets the minimum average rating (1-5 scale).
+     * @return Minimum rating, or null if not set
+     */
+    public Integer getMinRating() {
+        return minRating;
+    }
+    /**
+     * Sets the minimum average rating (1-5 scale).
+     * @param minRating Minimum rating to set, must be between 1.0 and 5.0, or null if not set
+     */
+    public void setMinRating(Integer minRating) {
+        this.minRating = minRating;
+    }
+    /**
+     * Gets the geographic latitude for the search.
+     * @return Latitude coordinate, or null if not set
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+    /**
+     * Sets the geographic latitude for the search.
+     * @param latitude Latitude coordinate to set, cannot be null
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+    /**
+     * Gets the geographic longitude for the search.
+     * @return Longitude coordinate, or null if not set
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+    /**
+     * Sets the geographic longitude for the search.
+     * @param longitude Longitude coordinate to set, cannot be null
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

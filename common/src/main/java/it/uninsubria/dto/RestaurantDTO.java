@@ -12,124 +12,201 @@ import java.io.Serializable;
 public class RestaurantDTO implements Serializable {
     /** Serial version UID for serialization compatibility */
     private static final long serialVersionUID = 1L;
-
-    private String id;
-    private String name;
-    private AddressDTO address;
+    /** Unique identifier for the restaurant */
+    private String restaurant_id;
+    /** Username of the restaurant owner */
+    private String r_owner;
+    /** Name of the restaurant */
+    private String r_name;
+    /** Average price in euros */
     private Double avg_price;
-    private Integer rating_count;  // Added the number of ratings
-    private Double avg_rating;
+    /** Whether the restaurant offers delivery service */
     private Boolean delivery;
-    private Boolean online_booking;
-    private CuisineType cuisine;
-    private String owner_usrId;
+    /** Whether the restaurant allows online booking */
+    private Boolean booking;
+    /** Type of cuisine offered by the restaurant */
+    private CuisineType r_type;
+    /** Address information encapsulated in AddressDTO */
+    private AddressDTO address;
 
     /**
-     * Complete constructor with all restaurant information including ID.
-     * Useful for retrieving existing restaurant data.
-     *
-     * @param id Unique identifier for the restaurant
-     * @param name Name of the restaurant
-     * @param nation Nation where the restaurant is located
-     * @param city City where the restaurant is located
-     * @param address Street address of the restaurant
-     * @param latitude Geographic latitude
-     * @param longitude Geographic longitude
+     * Constructor with all fields.
+     * @param restaurant_id Unique identifier for the restaurant
+     * @param r_owner Username of the restaurant owner
+     * @param r_name Name of the restaurant
      * @param avg_price Average price in euros
-     * @param rating_count Number of ratings received
-     * @param avg_rating Average rating from reviews (1-5)
-     * @param delivery Whether delivery service is available
-     * @param online_booking Whether online booking is available
-     * @param cuisine Type of cuisine from the enumeration
-     * @param owner_usrId User ID of the restaurant owner
+     * @param delivery Whether the restaurant offers delivery service
+     * @param booking Whether the restaurant allows online booking
+     * @param r_type Type of cuisine from the enumeration
+     * @param address Address information encapsulated in AddressDTO
      */
-    public RestaurantDTO(String id, String name, String nation, String city, String address,
-                         Double latitude, Double longitude, Double avg_price,
-                         Integer rating_count, Double avg_rating,
-                         Boolean delivery, Boolean online_booking, CuisineType cuisine,
-                         String owner_usrId) {
-        this.id = id;
-        this.name = name;
-        this.address = new AddressDTO(nation, city, address, latitude, longitude);
+    public RestaurantDTO(String restaurant_id, String r_owner, String r_name,
+                           Double avg_price, Boolean delivery, Boolean booking,
+                           CuisineType r_type, AddressDTO address) {
+        this.restaurant_id = restaurant_id;
+        this.r_owner = r_owner;
+        this.r_name = r_name;
         this.avg_price = avg_price;
-        this.rating_count = rating_count;
-        this.avg_rating = avg_rating;
         this.delivery = delivery;
-        this.online_booking = online_booking;
-        this.cuisine = cuisine;
-        this.owner_usrId = owner_usrId;
+        this.booking = booking;
+        this.r_type = r_type;
+        this.address = address;
     }
 
     /**
      * Constructor without ID for creating a new restaurant.
      * The ID will be assigned by the database.
-     * Average rating is set to null as a new restaurant has no reviews yet.
-     *
-     * @param name Name of the restaurant
-     * @param nation Nation where the restaurant is located
-     * @param city City where the restaurant is located
-     * @param address Street address of the restaurant
-     * @param latitude Geographic latitude
-     * @param longitude Geographic longitude
+     * @param r_owner Username of the restaurant owner
+     * @param r_name Name of the restaurant
      * @param avg_price Average price in euros
-     * @param delivery Whether delivery service is available
-     * @param online_booking Whether online booking is available
-     * @param cuisine Type of cuisine from the enumeration
-     * @param owner_usrId User ID of the restaurant owner
+     * @param delivery Whether the restaurant offers delivery service
+     * @param booking Whether the restaurant allows online booking
+     * @param r_type Type of cuisine from the enumeration
+     * @param address Address information encapsulated in AddressDTO
      */
-    public RestaurantDTO(String name, String nation, String city, String address,
-                         Double latitude, Double longitude, Double avg_price,
-                         Boolean delivery, Boolean online_booking, CuisineType cuisine,
-                         String owner_usrId) {
-        this.id = null;
-        this.name = name;
-        this.address = new AddressDTO(nation, city, address, latitude, longitude);
+    public RestaurantDTO(String r_owner, String r_name,
+                           Double avg_price, Boolean delivery, Boolean booking,
+                           CuisineType r_type, AddressDTO address) {
+        this.restaurant_id = null; // ID will be assigned by the database
+        this.r_owner = r_owner;
+        this.r_name = r_name;
         this.avg_price = avg_price;
-        this.rating_count = 0;     // Initialize with zero ratings
-        this.avg_rating = null;    // no reviews
         this.delivery = delivery;
-        this.online_booking = online_booking;
-        this.cuisine = cuisine;
-        this.owner_usrId = owner_usrId;
+        this.booking = booking;
+        this.r_type = r_type;
+        this.address = address;
     }
 
+    /**
+     * Default constructor for serialization.
+     * Initializes a completely empty RestaurantDTO.
+     */
     public RestaurantDTO() {}
 
     @Override
     public String toString() {
         return "RestaurantDTO{" +
-                "id='" + id + '\'' +
-                ", name='" + name + "', "
+                "id='" + restaurant_id + '\'' +
+                ", name='" + r_name + "', "
                 + address + '\'' +
                 ", avg_price=" + avg_price +
-                ", rating_count=" + rating_count +
-                ", avg_rating=" + avg_rating +
                 ", delivery=" + delivery +
-                ", online_booking=" + online_booking +
-                ", cuisine=" + cuisine +
-                ", owner_usrId='" + owner_usrId + '\'' +
+                ", online_booking=" + booking +
+                ", cuisine=" + r_type +
+                ", owner_usrId='" + r_owner + '\'' +
                 '}';
-    }
-    /**
-     * Returns the country of the restaurant.
-     * @return address country
-     */
-    public String getCountry() {
-        return address.getCountry();
     }
 
     /**
-     * Returns the city of the restaurant.
-     * @return address city
+     * Getters and Setters for all fields.
+     * These methods allow access to private fields while maintaining encapsulation.
      */
-    public String getCity() {
-        return address.getCity();
+    public String getRestaurant_id() {
+        return restaurant_id;
     }
     /**
-     * Returns the street of the restaurant.
-     * @return address street
+     * Sets the unique identifier for the restaurant.
+     * @param restaurant_id Unique identifier to set
      */
-    public String getStreet() {
-        return address.getStreet();
+    public void setRestaurant_id(String restaurant_id) {
+        this.restaurant_id = restaurant_id;
+    }
+    /**
+     * Gets the username of the restaurant owner.
+     * @return Username of the restaurant owner
+     */
+    public String getR_owner() {
+        return r_owner;
+    }
+    /**
+     * Sets the username of the restaurant owner.
+     * @param r_owner Username to set
+     */
+    public void setR_owner(String r_owner) {
+        this.r_owner = r_owner;
+    }
+    /**
+     * Gets the name of the restaurant.
+     * @return Name of the restaurant
+     */
+    public String getR_name() {
+        return r_name;
+    }
+    /**
+     * Sets the name of the restaurant.
+     * @param r_name Name to set
+     */
+    public void setR_name(String r_name) {
+        this.r_name = r_name;
+    }
+    /**
+     * Gets the average price in euros.
+     * @return Average price
+     */
+    public Double getAvg_price() {
+        return avg_price;
+    }
+    /**
+     * Sets the average price in euros.
+     * @param avg_price Average price to set
+     */
+    public void setAvg_price(Double avg_price) {
+        this.avg_price = avg_price;
+    }
+    /**
+     * Gets whether the restaurant offers delivery service.
+     * @return True if delivery is available, false otherwise
+     */
+    public Boolean getDelivery() {
+        return delivery;
+    }
+    /**
+     * Sets whether the restaurant offers delivery service.
+     * @param delivery True if delivery is available, false otherwise
+     */
+    public void setDelivery(Boolean delivery) {
+        this.delivery = delivery;
+    }
+    /**
+     * Gets whether the restaurant allows online booking.
+     * @return True if booking is available, false otherwise
+     */
+    public Boolean getBooking() {
+        return booking;
+    }
+    /**
+     * Sets whether the restaurant allows online booking.
+     * @param booking True if booking is available, false otherwise
+     */
+    public void setBooking(Boolean booking) {
+        this.booking = booking;
+    }
+    /**
+     * Gets the type of cuisine offered by the restaurant.
+     * @return CuisineType enumeration value
+     */
+    public CuisineType getR_type() {
+        return r_type;
+    }
+    /**
+     * Sets the type of cuisine offered by the restaurant.
+     * @param r_type CuisineType enumeration value to set
+     */
+    public void setR_type(CuisineType r_type) {
+        this.r_type = r_type;
+    }
+    /**
+     * Gets the address information encapsulated in AddressDTO.
+     * @return AddressDTO containing address details
+     */
+    public AddressDTO getAddress() {
+        return address;
+    }
+    /**
+     * Sets the address information encapsulated in AddressDTO.
+     * @param address AddressDTO containing address details to set
+     */
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 }

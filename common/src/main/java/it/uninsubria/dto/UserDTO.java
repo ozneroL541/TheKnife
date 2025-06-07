@@ -11,18 +11,22 @@ import java.sql.Date;
  * @author Lorenzo Radice, 753252, CO
  */
 public class UserDTO implements Serializable {
-
+    /** Serial version UID for serialization compatibility. */
     private static final long serialVersionUID = 1L;
-
-    private String usr_id;
-    private String password_pt;
+    /** Username */
+    private String username;
+    /** User's password */
+    private String password;
+    /** User's first name */
     private String name;
+    /** User's last name */
     private String surname;
-    private AddressDTO address;
-    private Double latitude;
-    private Double longitude;
-    private Date bd;
+    /** User's birthdate */
+    private Date birth_date;
+    /** User's role (client/owner) */
     private UserRoleDTO role;
+    /** User's address information */
+    private AddressDTO address;
 
     /**
      * Default constructor.
@@ -35,20 +39,20 @@ public class UserDTO implements Serializable {
      * Constructor with minimal authentication information.
      * Useful for login operations.
      *
-     * @param usr_id User's unique identifier
-     * @param password_pt User's password
+     * @param username User's unique identifier
+     * @param password User's password
      */
-    public UserDTO(String usr_id, String password_pt) {
-        this.usr_id = usr_id;
-        this.password_pt = password_pt;
+    public UserDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     /**
      * Constructor with all user information including nation and city.
      * Useful for full data transfer operations.
      *
-     * @param usr_id User's unique identifier
-     * @param password_pt User's password
+     * @param username User's unique identifier
+     * @param password User's password
      * @param name User's first name
      * @param surname User's last name
      * @param nation User's nation of residence
@@ -56,68 +60,50 @@ public class UserDTO implements Serializable {
      * @param address User's street address
      * @param latitude User's latitude location
      * @param longitude User's longitude location
-     * @param bd User's birthdate (can be null)
+     * @param birth_date User's birthdate (can be null)
      * @param role User's role (client/owner)
      *
      */
-    public UserDTO(String usr_id, String password_pt, String name, String surname,
+    public UserDTO(String username, String password, String name, String surname,
                    String nation, String city, String address, Double latitude, Double longitude,
-                   Date bd, String role) {
-        this.usr_id = usr_id;
-        this.password_pt = password_pt;
+                   Date birth_date, String role) {
+        this.username = username;
+        this.password = password;
         this.name = name;
         this.surname = surname;
         this.address = new AddressDTO(nation, city, address, latitude, longitude);
-        this.bd = bd;
+        this.birth_date = birth_date;
         this.role = UserRoleDTO.valueOf(role.toUpperCase());
     }
+
     /**
-     * Addressless constructor, currently used from server to store user. Might remove if useless.
-     *
-     * @param usr_id User's unique identifier
-     * @param password_pt User's password
+     * Constructor with all user information except address.
+     * Useful for operations where address is not needed.
+     * @param username User's username
+     * @param password User's password
      * @param name User's first name
      * @param surname User's last name
-     * @param latitude User's latitude location
-     * @param longitude User's longitude location
-     * @param bd User's birthdate (can be null)
+     * @param birth_date User's birthdate (can be null)
      * @param role User's role (client/owner)
      */
-    public UserDTO(String usr_id, String password_pt, String name, String surname,
-                   Double latitude, Double longitude,
-                   Date bd, UserRoleDTO role) {
-        this.usr_id = usr_id;
-        this.password_pt = password_pt;
+    public UserDTO(String username, String password, String name, String surname,
+                   Date birth_date, UserRoleDTO role) {
+        this.username = username;
+        this.password = password;
         this.name = name;
         this.surname = surname;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.bd = bd;
+        this.birth_date = birth_date;
         this.role = role;
-    }
-    /**
-     * Constructor with only latitude and longitude used for guests handling in the client.
-     *
-     * @param latitude User's latitude location
-     * @param longitude User's longitude location
-     *
-     */
-    public UserDTO(double latitude, double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
     }
 
     @Override
     public String toString() {
         return "UserDTO{" +
-                "usr_id='" + usr_id + '\'' +
-                ", password_pt='" + password_pt + '\'' +
+                "usr_id='" + username + '\'' +
+                ", password_pt='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                // address + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                // ", bd=" + bd +
+                ", birth_date=" + birth_date +
                 ", role='" + role + '\'' +
                 '}';
     }
@@ -127,13 +113,13 @@ public class UserDTO implements Serializable {
      * @return username
      */
     public String getUsername() {
-        return usr_id;
+        return username;
     }
     /**
      * Get password.
      * @return username
      */
-    public String getPassword() { return password_pt;}
+    public String getPassword() { return password;}
     /**
      * Get name.
      * @return name
@@ -156,25 +142,11 @@ public class UserDTO implements Serializable {
         return address;
     }
     /**
-     * Get latitude.
-     * @return latitude
-     */
-    public Double getLatitude() {
-        return latitude;
-    }
-    /**
-     * Get longitude.
-     * @return longitude
-     */
-    public Double getLongitude() {
-        return longitude;
-    }
-    /**
      * Get birthdate.
      * @return birthdate
      */
     public Date getBirthday() {
-        return bd;
+        return birth_date;
     }
     /**
      * Get role.
@@ -204,5 +176,54 @@ public class UserDTO implements Serializable {
      */
     public String getStreet() {
         return this.address.getStreet();
+    }
+    /**
+     * Set username.
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    /**
+     * Set password.
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    /**
+     * Set name.
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    /**
+     * Set surname.
+     * @param surname the surname to set
+     */
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+    /**
+     * Set birthdate.
+     * @param birth_date the birthdate to set
+     */
+    public void setBirth_date(Date birth_date) {
+        this.birth_date = birth_date;
+    }
+    /**
+     * Set role.
+     * @param role the role to set
+     */
+    public void setRole(UserRoleDTO role) {
+        this.role = role;
+    }
+    /**
+     * Set address.
+     * @param address the address to set
+     */
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 }
