@@ -1,12 +1,4 @@
-DO $$
-BEGIN
-IF NOT EXISTS (
-	SELECT 1
-	FROM pg_type
-	WHERE typname = 'role_type')
-THEN
-	CREATE TYPE ROLE_TYPE AS ENUM ('owner', 'client');
-END IF;
+CREATE TYPE ROLE_TYPE AS ENUM ('owner', 'client');
 
 CREATE TABLE IF NOT EXISTS Users (
 	username VARCHAR(100) PRIMARY KEY,
@@ -19,5 +11,3 @@ CREATE TABLE IF NOT EXISTS Users (
 		ON UPDATE CASCADE
 		ON DELETE NO ACTION
 	);
-END
-$$;
