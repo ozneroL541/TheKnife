@@ -19,7 +19,7 @@ public class UserDAO {
      * This query selects all relevant fields from the Users table.
      */
     private static final String QUERY_GET_USER_BY_USERID = """
-            SELECT username, h_password, name, surname, birth_date, role, latitude, longitude, address_id
+            SELECT username, h_password, name, surname, birth_date, role, address_id
             FROM Users
             WHERE username = ?
             """;
@@ -27,7 +27,7 @@ public class UserDAO {
      * SQL query to add a new user to the database.
      * This query inserts a new record into the Users table with all necessary fields.
      */
-    private static final String QUERY_ADD_USER = "INSERT INTO users (username, h_password, name, surname, birth_date, role, latitude, longitude, address_id) " +
+    private static final String QUERY_ADD_USER = "INSERT INTO users (username, h_password, name, surname, birth_date, role, address_id) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
@@ -55,7 +55,6 @@ public class UserDAO {
                     Date birthDate = rs.getDate("birth_date");  // Can be null
                     String roleString = rs.getString("role");
                     UserRoleDTO role = UserRoleDTO.fromDisplayName(roleString);  // ENUM converted to String
-                    // Note: address_id is not mapped to UserDTO as it's not in the DTO structure
                     // Create and return UserDTO with all available information
                     return new UserDTO(username, hashedPassword, name, surname, birthDate, role);
                 } else {
@@ -84,7 +83,7 @@ public class UserDAO {
         Connection conn = DBConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(QUERY_ADD_USER);
         stmt.setString(1, userData.getUsername());
-        stmt.setString(2, userData.getPassword()); // Assuming password is already hashed
+        stmt.setString(2, userData.getHashedPassword());
         stmt.setString(3, userData.getName());
         stmt.setString(4, userData.getSurname());
         stmt.setDate(5, userData.getBirthday());

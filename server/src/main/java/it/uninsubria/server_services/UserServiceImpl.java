@@ -38,7 +38,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             throw new SecurityException("Invalid credentials");
         }
         // Check password
-        if (!userRecord.getPassword().equals(psw)) {
+        if (!userRecord.verifyPassword(psw)) {
             System.err.println("Login attempt failed: Wrong password for user - " + usr);
             throw new SecurityException("Invalid credentials");
         }

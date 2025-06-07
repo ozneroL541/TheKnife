@@ -1,5 +1,8 @@
 package it.uninsubria.dto;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -107,7 +110,10 @@ public class UserDTO implements Serializable {
                 ", role='" + role + '\'' +
                 '}';
     }
-
+    public Boolean verifyPassword(String h_password) {
+        Argon2 argon2 = Argon2Factory.create();
+        return argon2.verify(h_password, this.password.toCharArray());
+    }
     /**
      * Get username.
      * @return username
@@ -120,6 +126,14 @@ public class UserDTO implements Serializable {
      * @return username
      */
     public String getPassword() { return password;}
+    /**
+     * Get hashed password.
+     * @return username
+     */
+    public String getHashedPassword() {
+        Argon2 argon2 = Argon2Factory.create();
+        return argon2.hash(10, 65536, 1, this.password.toCharArray());
+    }
     /**
      * Get name.
      * @return name
