@@ -42,21 +42,21 @@ public class ReviewServiceImpl extends UnicastRemoteObject implements ReviewServ
     }
 
     @Override
-    public synchronized boolean deleteReview(String userId, String restaurantId) throws RemoteException, SecurityException {
+    public synchronized boolean deleteReview(String username, String restaurantId) throws RemoteException, SecurityException {
         try {
-            ReviewDAO.deleteReview(userId, restaurantId);
+            ReviewDAO.deleteReview(username, restaurantId);
             return true;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting review for user ID: " + userId + " and restaurant ID: " + restaurantId, e);
+            throw new RuntimeException("Error deleting review for user ID: " + username + " and restaurant ID: " + restaurantId, e);
         }
     }
 
     @Override
-    public synchronized List<ReviewDTO> getUserReviews(String userId) throws RemoteException {
+    public synchronized List<ReviewDTO> getUserReviews(String username) throws RemoteException {
         try {
-            return ReviewDAO.getUserReviews(userId);
+            return ReviewDAO.getUserReviews(username);
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving reviews for user ID: " + userId, e);
+            throw new RuntimeException("Error retrieving reviews for user ID: " + username, e);
         }
     }
 }

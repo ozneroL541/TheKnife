@@ -40,21 +40,21 @@ public interface ReviewService extends Remote {
      * Deletes a review.
      * A user can only delete their own reviews.
      *
-     * @param userId The ID of the user attempting to delete the review
+     * @param username The ID of the user attempting to delete the review
      * @param restaurantId The ID of the restaurant that was reviewed
      * @return true if the review was successfully deleted, false otherwise
      * @throws RemoteException If a remote communication error occurs
      * @throws SecurityException If the user does not have permission to delete this review
      */
-    boolean deleteReview(String userId, String restaurantId) throws RemoteException, SecurityException;
+    boolean deleteReview(String username, String restaurantId) throws RemoteException, SecurityException;
 
     /**
      * Retrieves all reviews created by a specific user.
      *
-     * @param userId The ID of the user whose reviews to retrieve
+     * @param username The ID of the user whose reviews to retrieve
      * @return A list of reviews created by the user
      * @throws RemoteException If a remote communication error occurs
      */
     //not necessary
-    List<ReviewDTO> getUserReviews(String userId) throws RemoteException;
+    List<ReviewDTO> getUserReviews(String username) throws RemoteException;
 }
