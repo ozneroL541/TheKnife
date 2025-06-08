@@ -28,7 +28,7 @@ public class UserDAO {
      * This query inserts a new record into the Users table with all necessary fields.
      */
     private static final String QUERY_ADD_USER = "INSERT INTO users (username, h_password, name, surname, birth_date, role, address_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 
     /**
@@ -88,7 +88,7 @@ public class UserDAO {
         stmt.setString(4, userData.getSurname());
         stmt.setDate(5, userData.getBirthday());
         stmt.setObject(6, userData.getRole(), Types.OTHER); // Convert ENUM to String
-        stmt.setInt(9, addressId);
+        stmt.setInt(7, addressId);
         stmt.executeUpdate();
     }
 }

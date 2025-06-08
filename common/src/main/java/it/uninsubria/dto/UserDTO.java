@@ -99,6 +99,28 @@ public class UserDTO implements Serializable {
         this.role = role;
     }
 
+    /**
+     * Constructor with all user.
+     * Useful for full data transfer operations.
+     *
+     * @param username User's unique identifier
+     * @param password User's password
+     * @param name User's first name
+     * @param surname User's last name
+     * @param birth_date User's birthdate (can be null)
+     * @param role User's role (client/owner)
+     * @param address User's address information
+     */
+    public UserDTO(String username, String password, String name, String surname, Date birth_date, UserRoleDTO role, AddressDTO address) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.birth_date = birth_date;
+        this.role = role;
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -112,7 +134,7 @@ public class UserDTO implements Serializable {
     }
     public Boolean verifyPassword(String h_password) {
         Argon2 argon2 = Argon2Factory.create();
-        return argon2.verify(h_password, this.password.toCharArray());
+        return argon2.verify(this.password, h_password.toCharArray());
     }
     /**
      * Get username.
