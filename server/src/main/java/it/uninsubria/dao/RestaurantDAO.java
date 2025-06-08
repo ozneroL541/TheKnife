@@ -17,14 +17,16 @@ import java.util.ArrayList;
  * @author Lorenzo Radice
  */
 public class RestaurantDAO {
+    private static final String projectionClause = "SELECT *, ";
     /** Haversine formula SQL query for calculating distance */
-    private static final String HaversineQuery = "SELECT *, " +
-            "(6371 * acos(" +
-            "cos(radians(?)) * cos(radians(latitude)) * " +
-            "cos(radians(longitude) - radians(?)) + " +
-            "sin(radians(?)) * sin(radians(latitude))" +
-            ")) AS distance " +
-            "FROM restaurants ";
+    private static final String HaversineQuery =
+            " (6371 * ACOS(" +
+            "COS(radians(?)) * COS(radians(latitude)) * " +
+            "COS(radians(longitude) - RADIANS(?)) + " +
+            "SIN(radians(?)) * SIN(RADIANS(latitude))" +
+            ")) AS distance ";
+    private static final String fromClause = "FROM restaurants NATURAL JOIN addresses ";
+    private static final String fullBeginningQuery = projectionClause + HaversineQuery + fromClause;
 
     /**
      * Searches for restaurants based on the provided criteria.
@@ -42,9 +44,9 @@ public class RestaurantDAO {
         String query = buildDistanceBasedQuery(criteria);
         Connection conn = DBConnection.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try (ResultSet res = stmt.executeQuery()) {
-                result = parseSQLRestaurantResults(res);
-            }
+            setQueryParameters(stmt, criteria);
+            ResultSet res = stmt.executeQuery();
+            result = parseSQLRestaurantResults(res);
         } catch (Exception e) {
             System.err.println("Error executing search query: " + e.getMessage());
         }
@@ -59,7 +61,7 @@ public class RestaurantDAO {
      * @return Complete SQL query string with distance calculation and filtering
      */
     private static String buildDistanceBasedQuery(SearchCriteriaDTO criteria) {
-        StringBuilder query = new StringBuilder(HaversineQuery);
+        StringBuilder query = new StringBuilder(fullBeginningQuery);
         boolean hasWhere = false;
 
         // Add filtering conditions (excluding coordinates since we use distance)
@@ -98,7 +100,7 @@ public class RestaurantDAO {
         }
 
         // Order by distance and limit to 10 closest restaurants
-        query.append("ORDER BY distance ASC LIMIT 10");
+        query.append("ORDER BY distance ASC LIMIT 10;");
 
         return query.toString();
     }
@@ -106,12 +108,11 @@ public class RestaurantDAO {
     /**
      * Sets the parameters for the prepared statement based on search criteria.
      *
-     * @param stmt The prepared statement to set parameters for
+     * @param stmt     The prepared statement to set parameters for
      * @param criteria The search criteria containing the parameter values
-     * @return The next parameter index after setting all parameters
      * @throws SQLException If there's an error setting parameters
      */
-    private static int setQueryParameters(PreparedStatement stmt, SearchCriteriaDTO criteria) throws SQLException {
+    private static void setQueryParameters(PreparedStatement stmt, SearchCriteriaDTO criteria) throws SQLException {
         int paramIndex = 1;
 
         // First 3 parameters are always the coordinates for distance calculation
@@ -141,10 +142,9 @@ public class RestaurantDAO {
         }
 
         if (criteria.getMinRating() != null) {
-            stmt.setDouble(paramIndex++, criteria.getMinRating());
+            stmt.setDouble(paramIndex, criteria.getMinRating());
         }
 
-        return paramIndex;
     }
 
     /**
@@ -314,8 +314,8 @@ public class RestaurantDAO {
      * @throws SQLException If there's an error executing the database operation
      */
     public static RestaurantDTO insertRestaurant(RestaurantDTO restaurant) throws SQLException {
-        final String query = "INSERT INTO restaurants (restaurant_id, r_owner, r_name, avg_price, delivery, booking, r_type, latitude, longitude, address_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO restaurants (restaurant_id, r_owner, r_name, avg_price, delivery, booking, r_type, address_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         Connection conn = DBConnection.getConnection();
 
@@ -340,7 +340,7 @@ public class RestaurantDAO {
             stmt.setBoolean(5, restaurant.getDelivery());
             stmt.setBoolean(6, restaurant.getBooking());
             stmt.setObject(7, restaurant.getR_type().getDisplayName(), Types.OTHER);
-            stmt.setInt(10, addressId);
+            stmt.setInt(8, addressId);
             stmt.executeUpdate();
         }
 
