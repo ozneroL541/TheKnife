@@ -107,12 +107,12 @@ public class AddReviewController {
         this.isEditingMode = false;
         this.existingReview = null;
 
-        restaurantNameLabel.setText(restaurant.name);
+        restaurantNameLabel.setText(restaurant.getR_name());
 
         // Hide delete button for new reviews
         deleteButton.setVisible(false);
 
-        LOGGER.info("Set restaurant for new review: " + restaurant.name + ", delete button hidden");
+        LOGGER.info("Set restaurant for new review: " + restaurant.getR_name() + ", delete button hidden");
     }
 
     /**
@@ -128,18 +128,18 @@ public class AddReviewController {
 
             // Set the restaurant info
             this.restaurant = new RestaurantDTO();
-            this.restaurant.id = review.rest_id;
+            this.restaurant.setRestaurant_id(review.getRestaurant_id());
 
             // Update title for editing mode
             titleLabel.setText("Edit Review");
             submitButton.setText("Update Review");
 
             // Set the rating
-            updateStarSelection(review.rating);
+            updateStarSelection(review.getRating());
 
             // Set the review text
-            if (review.customer_msg != null) {
-                reviewTextArea.setText(review.customer_msg);
+            if (review.getComment() != null) {
+                reviewTextArea.setText(review.getComment());
             }
 
             // Update character count
@@ -296,9 +296,10 @@ public class AddReviewController {
             // Create review DTO
             ReviewDTO newReview = new ReviewDTO(
                     userSession.getUserId(),
-                    restaurant.id,
+                    restaurant.getRestaurant_id(),
+                    currentRatingSelection,
                     reviewTextArea.getText().trim(),
-                    currentRatingSelection
+                    null
             );
 
             // Submit review via service
@@ -314,7 +315,7 @@ public class AddReviewController {
                 alert.setContentText("Thank you for sharing your experience");
                 alert.showAndWait();
 
-                LOGGER.info("Review " + operationType + " successfully for restaurant " + restaurant.id);
+                LOGGER.info("Review " + operationType + " successfully for restaurant " + restaurant.getRestaurant_id());
                 closeWindow();
             } else {
                 String operationType = isEditingMode ? "Update" : "Add";
@@ -352,7 +353,7 @@ public class AddReviewController {
 
         try {
             // Call the delete service
-            boolean success = reviewService.deleteReview(userSession.getUserId(), restaurant.id);
+            boolean success = reviewService.deleteReview(userSession.getUserId(), restaurant.getRestaurant_id());
 
             if (success) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -361,7 +362,7 @@ public class AddReviewController {
                 alert.setContentText("Your review has been removed from the restaurant");
                 alert.showAndWait();
 
-                LOGGER.info("Review deleted successfully for restaurant " + restaurant.id + " by user " + userSession.getUserId());
+                LOGGER.info("Review deleted successfully for restaurant " + restaurant.getRestaurant_id() + " by user " + userSession.getUserId());
                 closeWindow();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

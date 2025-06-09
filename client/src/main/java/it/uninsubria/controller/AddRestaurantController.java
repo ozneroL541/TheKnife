@@ -1,5 +1,6 @@
 package it.uninsubria.controller;
 
+import it.uninsubria.dto.AddressDTO;
 import it.uninsubria.dto.CuisineType;
 import it.uninsubria.dto.RestaurantDTO;
 import it.uninsubria.services.RestaurantService;
@@ -133,7 +134,7 @@ public class AddRestaurantController {
         String name = nameField.getText().trim();
         String nation = nationField.getText().trim();
         String city = cityField.getText().trim();
-        String address = addressField.getText().trim();
+        String street = addressField.getText().trim();
         Double latitude = Double.parseDouble(latitudeField.getText().trim());
         Double longitude = Double.parseDouble(longitudeField.getText().trim());
         Double avgPrice = Double.parseDouble(avgPriceField.getText().trim());
@@ -141,9 +142,8 @@ public class AddRestaurantController {
         Boolean onlineBooking = onlineBookingCheckBox.isSelected();
         CuisineType cuisine = cuisineTypeComboBox.getValue();
         String ownerUsrId = userSession.getUserId();
-
-        return new RestaurantDTO(name, nation, city, address, latitude, longitude,
-                avgPrice, delivery, onlineBooking, cuisine, ownerUsrId);
+        AddressDTO address = new AddressDTO(nation, city, street, latitude, longitude);
+        return new RestaurantDTO(ownerUsrId, name, avgPrice, delivery, onlineBooking, cuisine, address);
     }
 
     /**
@@ -154,7 +154,7 @@ public class AddRestaurantController {
     private void handleRestaurantSubmission(RestaurantDTO restaurant) {
         try {
             RestaurantDTO created = restaurantService.createRestaurant(restaurant, userSession.getUserId());
-            System.out.println("Restaurant created with id: " + created.id);
+            System.out.println("Restaurant created with id: " + created.getRestaurant_id());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

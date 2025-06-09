@@ -50,6 +50,18 @@ public class AddressDTO implements Serializable {
         this.parseAddress(address);
     }
 
+    /**
+     * Constructor with latitude and longitude.
+     * Useful for location-based operations where only coordinates are needed.
+     *
+     * @param latitude User's latitude of residence
+     * @param longitude User's longitude of residence
+     */
+    public AddressDTO(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     private void parseAddress(String address) {
         try {
             String[] parts = address.split(" ");

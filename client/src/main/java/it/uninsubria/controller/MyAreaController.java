@@ -297,8 +297,8 @@ public class MyAreaController {
         int count = 0;
 
         for (RestaurantDTO restaurant : restaurants) {
-            if (restaurant.avg_rating != null && restaurant.avg_rating > 0) {
-                totalRating += restaurant.avg_rating;
+            if (restaurant.getAvgRating() != null && restaurant.getAvgRating() > 0) {
+                totalRating += restaurant.getAvgRating();
                 count++;
             }
         }
@@ -323,7 +323,7 @@ public class MyAreaController {
 
             // Create new stage for restaurant info
             Stage restaurantStage = new Stage();
-            restaurantStage.setTitle("Restaurant Info - " + restaurant.name);
+            restaurantStage.setTitle("Restaurant Info - " + restaurant.getR_name());
             restaurantStage.setScene(new Scene(root));
 
             // Set window properties
@@ -334,7 +334,7 @@ public class MyAreaController {
             // Show the window (non-modal)
             restaurantStage.show();
 
-            statusLabel.setText("Opened details for: " + restaurant.name);
+            statusLabel.setText("Opened details for: " + restaurant.getR_name());
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error loading restaurant info view", e);

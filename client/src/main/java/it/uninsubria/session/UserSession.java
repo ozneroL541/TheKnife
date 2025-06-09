@@ -120,15 +120,15 @@ public class UserSession {
      */
     public double[] getUserCoordinates() {
         if (currentUser != null &&
-                currentUser.getLatitude() != null && currentUser.getLongitude() != null) {
-            System.out.println("returned:"+ currentUser.getLatitude() + currentUser.getLongitude());
-            return new double[] {currentUser.getLatitude(), currentUser.getLongitude()};
+                currentUser.getAddress().getLatitude() != null && currentUser.getAddress().getLongitude() != null) {
+            System.out.println("returned:"+ currentUser.getAddress().getLatitude() + currentUser.getAddress().getLongitude());
+            return new double[] {currentUser.getAddress().getLatitude(), currentUser.getAddress().getLongitude()};
         }
         return null;
     }
 
     public void setGuestMode(double latitude, double longitude) {
         currentUser = new UserDTO(latitude, longitude);
-        System.out.println("setted" + latitude + longitude); //debug
+        //System.out.println("Coordinates: " + latitude + "', " + longitude); //debug
     }
 }

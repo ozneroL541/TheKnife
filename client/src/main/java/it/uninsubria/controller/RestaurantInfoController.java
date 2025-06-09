@@ -115,17 +115,17 @@ public class RestaurantInfoController {
     private void updateRestaurantInfo() {
         if (restaurant == null) return;
         // Basic info
-        restaurantNameLabel.setText(restaurant.name);
-        cuisineLocationLabel.setText(restaurant.cuisine.getDisplayName() + " • " + restaurant.getCity());
+        restaurantNameLabel.setText(restaurant.getR_name());
+        cuisineLocationLabel.setText(restaurant.getR_type().getDisplayName() + " • " + restaurant.getCity());
         // Address and location
-        addressLabel.setText(restaurant.getStreet() + ", " + restaurant.getCity() + ", " + restaurant.getCountry());
-        coordinatesLabel.setText(String.format("%.4f, %.4f", restaurant.latitude, restaurant.longitude));
+        addressLabel.setText(restaurant.getAddress().getStreet() + ", " + restaurant.getAddress().getCity() + ", " + restaurant.getAddress().getCountry());
+        coordinatesLabel.setText(String.format("%.4f, %.4f", restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude()));
         // Distance calculation
         updateDistanceDisplay();
         // Rating
         updateRatingDisplay();
         // Price
-        priceLabel.setText(String.format("€%.0f average price", restaurant.avg_price));
+        priceLabel.setText(String.format("€%.0f average price", restaurant.getAvg_price()));
         // Services
         updateServicesDisplay();
     }
@@ -139,7 +139,7 @@ public class RestaurantInfoController {
             if (userCoords != null) {
                 double distance = ClientUtil.calculateDistance(
                         userCoords[0], userCoords[1],
-                        restaurant.latitude, restaurant.longitude);
+                        restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude());
                 distanceLabel.setText(String.format("%.1f km from your location", distance));
             } else {
                 distanceLabel.setText("Distance: Location not available");
@@ -153,16 +153,16 @@ public class RestaurantInfoController {
      * Updates the rating display with stars and numbers.
      */
     private void updateRatingDisplay() {
-        if (restaurant.avg_rating != null) {
+        if (restaurant.getAvg_price() != null) {
             // Create star display
-            int fullStars = (int) Math.round(restaurant.avg_rating);
+            int fullStars = (int) Math.round(restaurant.getAvg_price());
             String stars = "★".repeat(Math.max(0, Math.min(5, fullStars))) +
                     "☆".repeat(Math.max(0, 5 - fullStars));
             ratingStarsLabel.setText(stars);
 
             // Rating text
             ratingLabel.setText(String.format("%.1f (%d reviews)",
-                    restaurant.avg_rating, restaurant.rating_count));
+                    restaurant.getAvg_price(), restaurant.getRating()));
         } else {
             ratingStarsLabel.setText("☆☆☆☆☆");
             ratingLabel.setText("No reviews yet");

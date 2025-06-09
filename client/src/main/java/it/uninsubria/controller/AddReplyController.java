@@ -83,8 +83,8 @@ public class AddReplyController {
         updateReviewDisplay();
 
         // Pre-fill with existing reply if it exists
-        if (review.rest_rep != null && !review.rest_rep.trim().isEmpty()) {
-            replyTextArea.setText(review.rest_rep);
+        if (review.getReply() != null && !review.getReply().trim().isEmpty()) {
+            replyTextArea.setText(review.getReply());
             submitButton.setText("Update Reply");
         } else {
             replyTextArea.clear();
@@ -102,26 +102,26 @@ public class AddReplyController {
         if (originalReview == null) return;
 
         // Set customer information
-        customerNameLabel.setText(originalReview.usr_id);
+        customerNameLabel.setText(originalReview.getUsername());
 
         // Set rating display
         updateRatingDisplay();
 
         // Set review text
-        customerReviewLabel.setText(originalReview.customer_msg);
+        customerReviewLabel.setText(originalReview.getComment());
 
         // TODO: Get restaurant name from restaurant ID
         // For now, show restaurant ID
-        restaurantNameLabel.setText("Restaurant ID: " + originalReview.rest_id);
+        restaurantNameLabel.setText("Restaurant ID: " + originalReview.getUsername());
     }
 
     /**
      * Updates the rating display with stars and numbers.
      */
     private void updateRatingDisplay() {
-        if (originalReview.rating != null) {
+        if (originalReview.getRating() != null) {
             // Create star display
-            int rating = originalReview.rating;
+            int rating = originalReview.getRating();
             String stars = "★".repeat(Math.max(0, Math.min(5, rating))) +
                     "☆".repeat(Math.max(0, 5 - rating));
             ratingStarsLabel.setText(stars);
@@ -259,13 +259,13 @@ public class AddReplyController {
      * @param replyText The reply text content
      */
     private void handleReplySubmission(String replyText) {
-        originalReview.rest_rep = replyText;
+        originalReview.setReply(replyText);
         try {
             reviewService.createOrUpdateReview(originalReview);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("Reply submitted successfully for review by: " + originalReview.usr_id);
+        LOGGER.info("Reply submitted successfully for review by: " + originalReview.getUsername());
     }
 
     /**

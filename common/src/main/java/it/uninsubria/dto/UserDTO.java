@@ -121,6 +121,16 @@ public class UserDTO implements Serializable {
         this.address = address;
     }
 
+    /**
+     * Constructor with coordinates information only.
+     * Useful for creating a guest UserDTO.
+     * @param latitude latitude
+     * @param longitude longitude
+     */
+    public UserDTO(Double latitude, Double longitude) {
+        this.address = new AddressDTO(latitude, longitude);
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
