@@ -197,7 +197,7 @@ public class SearchController {
         SearchCriteriaDTO.Builder builder = SearchCriteriaDTO.builder()
                 .coordinates(latitude, longitude)
                 .priceRange(minPrice > 0 ? minPrice : null, maxPrice < 300 ? maxPrice : null)
-                .minRating((double) currentRatingSelection);
+                .minRating((Integer) currentRatingSelection);
 
         // Add optional criteria
         if (cuisineTypeComboBox.getValue() != null) {
@@ -233,7 +233,7 @@ public class SearchController {
 
             // Create new stage for restaurant info
             Stage restaurantStage = new Stage();
-            restaurantStage.setTitle("Restaurant Info - " + restaurant.name);
+            restaurantStage.setTitle("Restaurant Info - " + restaurant.getR_name());
             restaurantStage.setScene(new Scene(root));
             // Set window properties
             restaurantStage.setResizable(true);
@@ -243,7 +243,7 @@ public class SearchController {
             // Show the window (non-modal)
             restaurantStage.show();
 
-            statusLabel.setText("Opened details for: " + restaurant.name);
+            statusLabel.setText("Opened details for: " + restaurant.getR_name());
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error loading restaurant info view", e);

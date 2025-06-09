@@ -91,7 +91,7 @@ public class ReviewCardComponent extends VBox {
         getChildren().addAll(headerBox, reviewTextLabel);
 
         // Add reply section if reply exists
-        if (review.rest_rep != null && !review.rest_rep.trim().isEmpty()) {
+        if (review.getReply() != null && !review.getReply().trim().isEmpty()) {
             Separator separator = new Separator();
             separator.setStyle("-fx-background-color: #e0e0e0;");
             getChildren().addAll(separator, replyBox);
@@ -109,7 +109,7 @@ public class ReviewCardComponent extends VBox {
         headerBox.setSpacing(10);
 
         // Reviewer name
-        Label reviewerLabel = new Label(review.usr_id);
+        Label reviewerLabel = new Label(review.getUsername());
         reviewerLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
 
         // Spacer
@@ -133,13 +133,13 @@ public class ReviewCardComponent extends VBox {
         ratingBox.setAlignment(Pos.CENTER_RIGHT);
 
         // Create star rating display
-        String stars = "★".repeat(Math.max(0, Math.min(5, review.rating))) +
-                "☆".repeat(Math.max(0, 5 - review.rating));
+        String stars = "★".repeat(Math.max(0, Math.min(5, review.getRating()))) +
+                "☆".repeat(Math.max(0, 5 - review.getRating()));
         Label starsLabel = new Label(stars);
         starsLabel.setStyle("-fx-text-fill: #ffc107; -fx-font-size: 14px;");
 
         // Rating number
-        Label ratingNumberLabel = new Label("(" + review.rating + "/5)");
+        Label ratingNumberLabel = new Label("(" + review.getRating() + "/5)");
         ratingNumberLabel.setStyle("-fx-text-fill: #666666; -fx-font-size: 12px;");
 
         ratingBox.getChildren().addAll(starsLabel, ratingNumberLabel);
@@ -158,13 +158,13 @@ public class ReviewCardComponent extends VBox {
         reviewTextLabel.setMaxWidth(Double.MAX_VALUE);
 
         // Handle null customer message
-        if (review.customer_msg == null) {
+        if (review.getComment() == null) {
             reviewTextLabel.setText("");
             return reviewTextLabel;
         }
 
         // Limit display length for long reviews
-        String displayText = review.customer_msg;
+        String displayText = review.getComment();
         if (displayText.length() > 200) {
             displayText = displayText.substring(0, 200) + "...";
         }
@@ -192,7 +192,7 @@ public class ReviewCardComponent extends VBox {
         replyHeaderLabel.setStyle("-fx-text-fill: #1976d2;");
 
         // Reply text - handle null safely
-        String replyText = review.rest_rep != null ? review.rest_rep : "";
+        String replyText = review.getReply() != null ? review.getReply() : "";
         Label replyTextLabel = new Label(replyText);
         replyTextLabel.setWrapText(true);
         replyTextLabel.setStyle("-fx-text-fill: #555555; -fx-font-size: 12px;");

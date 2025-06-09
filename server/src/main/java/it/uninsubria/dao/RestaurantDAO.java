@@ -368,9 +368,12 @@ public class RestaurantDAO {
         if (addressDTO == null) {
             throw new Exception("Address not found for restaurant " + restaurant_id);
         }
-        return new RestaurantDTO(restaurant_id, r_owner, r_name,
+        RestaurantDTO restaurantDTO = new RestaurantDTO(restaurant_id, r_owner, r_name,
                 avg_price, delivery, booking,
                 r_type, addressDTO);
+        restaurantDTO.setAvgRating(getAvgRating(restaurant_id));
+        restaurantDTO.setReviewsNumber(getRatingCount(restaurant_id));
+        return restaurantDTO;
     }
 
     /**

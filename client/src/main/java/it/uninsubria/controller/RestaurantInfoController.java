@@ -116,7 +116,7 @@ public class RestaurantInfoController {
         if (restaurant == null) return;
         // Basic info
         restaurantNameLabel.setText(restaurant.getR_name());
-        cuisineLocationLabel.setText(restaurant.getR_type().getDisplayName() + " • " + restaurant.getCity());
+        cuisineLocationLabel.setText(restaurant.getR_type().getDisplayName() + " • " + restaurant.getAddress().getCity());
         // Address and location
         addressLabel.setText(restaurant.getAddress().getStreet() + ", " + restaurant.getAddress().getCity() + ", " + restaurant.getAddress().getCountry());
         coordinatesLabel.setText(String.format("%.4f, %.4f", restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude()));
@@ -162,7 +162,7 @@ public class RestaurantInfoController {
 
             // Rating text
             ratingLabel.setText(String.format("%.1f (%d reviews)",
-                    restaurant.getAvg_price(), restaurant.getRating()));
+                    restaurant.getAvgRating(), restaurant.getReviewsNumber()));
         } else {
             ratingStarsLabel.setText("☆☆☆☆☆");
             ratingLabel.setText("No reviews yet");
@@ -173,11 +173,11 @@ public class RestaurantInfoController {
      * Updates the services display (delivery and booking).
      */
     private void updateServicesDisplay() {
-        deliveryLabel.setVisible(restaurant.delivery);
-        deliveryLabel.setManaged(restaurant.delivery);
+        deliveryLabel.setVisible(restaurant.getDelivery());
+        deliveryLabel.setManaged(restaurant.getDelivery());
 
-        bookingLabel.setVisible(restaurant.online_booking);
-        bookingLabel.setManaged(restaurant.online_booking);
+        bookingLabel.setVisible(restaurant.getBooking());
+        bookingLabel.setManaged(restaurant.getBooking());
     }
 
     /**
@@ -190,7 +190,7 @@ public class RestaurantInfoController {
             // Show loading state
             reviewsComponent.showLoadingReviews();
             // Load reviews
-            reviews = reviewService.getReviews(restaurant.id);
+            reviews = reviewService.getReviews(restaurant.getRestaurant_id());
 
             // Update reviews display
             reviewsComponent.showReviews(reviews);
@@ -198,7 +198,7 @@ public class RestaurantInfoController {
             reviewsSectionLabel.setText(String.format("Customer Reviews (%d)", reviews.size()));
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error loading reviews for restaurant " + restaurant.id, e);
+            LOGGER.log(Level.SEVERE, "Error loading reviews for restaurant " + restaurant.getRestaurant_id(), e);
             reviewsComponent.setStatusMessage("Error loading reviews");
         }
     }
@@ -216,10 +216,10 @@ public class RestaurantInfoController {
         boolean isLoggedIn = userSession.isLoggedIn();
         boolean isClient = userSession.isClient();
         boolean isOwner = userSession.isOwner();
-        boolean isRestaurantOwner = isOwner && restaurant.owner_usrId.equals(userSession.getUserId());
+        boolean isRestaurantOwner = isOwner && restaurant.getR_owner().equals(userSession.getUserId());
         boolean hasReviewed = false;
         for(ReviewDTO review: reviews){
-            if(review.usr_id.equals(userSession.getUserId())){
+            if(review.getUsername().equals(userSession.getUserId())){
                 hasReviewed = true;
                 break;
             }
@@ -242,7 +242,7 @@ public class RestaurantInfoController {
         }
         boolean isFavorite = false;
         for (RestaurantDTO rest: favourites) {
-           if(rest.id.equals(restaurant.id)){
+           if(rest.getRestaurant_id().equals(restaurant.getRestaurant_id())){
                isFavorite = true;
                break;
            }
@@ -266,13 +266,13 @@ public class RestaurantInfoController {
         }
         try {
             if (addToFavoritesButton.getText().equals("Add to Favorites")) {
-                restaurantService.addFavoriteRestaurant(userSession.getUserId(), restaurant.id);
+                restaurantService.addFavoriteRestaurant(userSession.getUserId(), restaurant.getRestaurant_id());
                 addToFavoritesButton.setText("Remove from Favorites");
-                LOGGER.info("Added restaurant " + restaurant.name + " to favorites");
+                LOGGER.info("Added restaurant " + restaurant.getR_name() + " to favorites");
             } else {
-                restaurantService.removeFavoriteRestaurant(userSession.getUserId(), restaurant.id);
+                restaurantService.removeFavoriteRestaurant(userSession.getUserId(), restaurant.getRestaurant_id());
                 addToFavoritesButton.setText("Add to Favorites");
-                LOGGER.info("Removed restaurant " + restaurant.name + " from favorites");
+                LOGGER.info("Removed restaurant " + restaurant.getR_name() + " from favorites");
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
@@ -291,7 +291,7 @@ public class RestaurantInfoController {
 
         ReviewDTO oldReview = null;
         for(ReviewDTO review: reviews){
-            if(review.usr_id.equals(userSession.getUserId())){
+            if(review.getUsername().equals(userSession.getUserId())){
                 oldReview = review;
                 break;
             }
@@ -310,7 +310,7 @@ public class RestaurantInfoController {
             }
             // Create modal stage for add review
             Stage reviewStage = new Stage();
-            reviewStage.setTitle("Write Review - " + restaurant.name);
+            reviewStage.setTitle("Write Review - " + restaurant.getR_name());
             reviewStage.setScene(new Scene(root));
 
             // Set window properties
@@ -341,14 +341,14 @@ public class RestaurantInfoController {
 
         // Check if current user is the restaurant owner
         boolean isRestaurantOwner = userSession.isOwner() &&
-                restaurant.owner_usrId.equals(userSession.getUserId());
+                restaurant.getR_owner().equals(userSession.getUserId());
 
         if (isRestaurantOwner) {
             openReplyWindow(review);
         } else {
             // For non-owners, just log the click (future: could open review detail view)
-            LOGGER.info("Review clicked: " + review.usr_id + " - " + review.rating + " stars");
-            System.out.println("Review clicked: " + review.usr_id + " - " + review.rating + " stars");
+            LOGGER.info("Review clicked: " + review.getUsername() + " - " + review.getRating() + " stars");
+            System.out.println("Review clicked: " + review.getUsername() + " - " + review.getRating() + " stars");
         }
     }
 
@@ -367,7 +367,7 @@ public class RestaurantInfoController {
             controller.setReview(review);
 
             Stage replyStage = new Stage();
-            replyStage.setTitle("Reply to Review - " + restaurant.name);
+            replyStage.setTitle("Reply to Review - " + restaurant.getR_name());
             replyStage.setScene(new Scene(root));
 
             // Set model window

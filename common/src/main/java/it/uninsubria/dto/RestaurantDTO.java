@@ -28,6 +28,10 @@ public class RestaurantDTO implements Serializable {
     private CuisineType r_type;
     /** Address information encapsulated in AddressDTO */
     private AddressDTO address;
+    /** Rating of the restaurant */
+    private Double rating;
+    /** Reviews number of the restaurant */
+    private Integer reviewsNumber;
 
     /**
      * Constructor with all fields.
@@ -208,5 +212,41 @@ public class RestaurantDTO implements Serializable {
      */
     public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+    /**
+     * Gets the rating of the restaurant.
+     * This field is not part of the original DTO but is used for displaying ratings.
+     * @return Rating of the restaurant, can be null if not set
+     */
+    public Double getAvgRating() {
+        return this.rating;
+    }
+    /**
+     * Sets the rating of the restaurant.
+     * The rating must be between 0 and 5, inclusive. If the value is outside this range,
+     * it will be set to null.
+     * @param avgRating Average rating to set, can be null
+     */
+    public void setAvgRating(Double avgRating) {
+        if (avgRating != null && avgRating >= 0 && avgRating <= 5) {
+            this.rating = avgRating;
+        } else {
+            this.rating = null;
+        }
+    }
+    /**
+     * Gets the number of reviews for the restaurant.
+     * This field is not part of the original DTO but is used for displaying review counts.
+     * @return Number of reviews, can be null if not set
+     */
+    public Integer getReviewsNumber() {
+        return reviewsNumber;
+    }
+    /**
+     * Sets the number of reviews for the restaurant.
+     * @param reviewsNumber Number of reviews to set, can be null
+     */
+    public void setReviewsNumber(Integer reviewsNumber) {
+        this.reviewsNumber = reviewsNumber;
     }
 }

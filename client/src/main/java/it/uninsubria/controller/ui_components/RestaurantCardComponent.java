@@ -81,12 +81,12 @@ public class RestaurantCardComponent extends VBox {
      */
     private void setupContent() {
         // Restaurant name
-        Label nameLabel = new Label(restaurant.name);
+        Label nameLabel = new Label(restaurant.getR_name());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
 
         // Cuisine and location
-        Label cuisineLocationLabel = new Label(restaurant.cuisine.getDisplayName() +
-                " • " + restaurant.getCity());
+        Label cuisineLocationLabel = new Label(restaurant.getR_type().getDisplayName() +
+                " • " + restaurant.getAddress().getCity());
         cuisineLocationLabel.setStyle("-fx-text-fill: #666666;");
 
         // Rating and reviews
@@ -112,9 +112,9 @@ public class RestaurantCardComponent extends VBox {
 
         // Star rating
         Label starsLabel = new Label();
-        if (restaurant.avg_rating != null) {
-            String stars = "★".repeat(Math.max(0, Math.min(5, (int) Math.round(restaurant.avg_rating)))) +
-                    "☆".repeat(Math.max(0, 5 - (int) Math.round(restaurant.avg_rating)));
+        if (restaurant.getAvgRating() != null) {
+            String stars = "★".repeat(Math.max(0, Math.min(5, (int) Math.round(restaurant.getAvgRating())))) +
+                    "☆".repeat(Math.max(0, 5 - (int) Math.round(restaurant.getAvgRating())));
             starsLabel.setText(stars);
             starsLabel.setStyle("-fx-text-fill: #ffc107;");
         } else {
@@ -122,7 +122,7 @@ public class RestaurantCardComponent extends VBox {
             starsLabel.setStyle("-fx-text-fill: #999999;");
         }        // Rating value and count
         Label ratingLabel = new Label(String.format("%.1f (%d reviews)",
-                restaurant.avg_rating, restaurant.rating_count));
+                restaurant.getAvgRating(), restaurant.getReviewsNumber()));
         ratingLabel.setStyle("-fx-text-fill: #666666; -fx-font-size: 12px;");
 
         ratingBox.getChildren().addAll(starsLabel, ratingLabel);
@@ -139,7 +139,7 @@ public class RestaurantCardComponent extends VBox {
         priceDistanceBox.setAlignment(Pos.CENTER_LEFT);
 
         // Price
-        Label priceLabel = new Label("€" + String.format("%.0f", restaurant.avg_price) + " avg");
+        Label priceLabel = new Label("€" + String.format("%.0f", restaurant.getAvg_price()) + " avg");
         priceLabel.setStyle("-fx-text-fill: #2e7d32; -fx-font-weight: bold;");
 
         // Spacer
@@ -166,7 +166,7 @@ public class RestaurantCardComponent extends VBox {
         if (userCoords != null) {
             double distance = ClientUtil.calculateDistance(
                     userCoords[0], userCoords[1],
-                    restaurant.latitude, restaurant.longitude);
+                    restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude());
             distanceLabel.setText(String.format("%.1f km", distance));
         } else {
             distanceLabel.setText("Location unknown");
@@ -185,13 +185,13 @@ public class RestaurantCardComponent extends VBox {
         HBox servicesBox = new HBox(10);
         servicesBox.setAlignment(Pos.CENTER_LEFT);
 
-        if (restaurant.delivery) {
+        if (restaurant.getDelivery()) {
             Label deliveryLabel = new Label("🚚 Delivery");
             deliveryLabel.setStyle("-fx-text-fill: #1976d2; -fx-font-size: 11px;");
             servicesBox.getChildren().add(deliveryLabel);
         }
 
-        if (restaurant.online_booking) {
+        if (restaurant.getBooking()) {
             Label bookingLabel = new Label("📅 Booking");
             bookingLabel.setStyle("-fx-text-fill: #1976d2; -fx-font-size: 11px;");
             servicesBox.getChildren().add(bookingLabel);
