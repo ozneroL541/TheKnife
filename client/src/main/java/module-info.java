@@ -1,4 +1,5 @@
-module it.uninsubria.client {
+module client {
+    requires common;
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,7 +7,11 @@ module it.uninsubria.client {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
+    requires java.sql;
+    requires java.rmi;
 
-    opens it.uninsubria.client to javafx.fxml;
-    exports it.uninsubria.client;
+    opens it.uninsubria.controller to javafx.fxml;
+    exports it.uninsubria.controller;
+    exports it.uninsubria.session;
+    opens it.uninsubria.session to javafx.fxml;
 }

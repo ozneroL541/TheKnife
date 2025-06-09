@@ -30,5 +30,23 @@
             <version>2.11</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>de.mkammerer</groupId>
+            <artifactId>argon2-jvm</artifactId>
+            <version>2.11</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
