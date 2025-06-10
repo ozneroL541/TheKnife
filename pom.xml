@@ -5,11 +5,11 @@
   <artifactId>TheKnife</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Archetype - TheKnife</name>
+  <name>TheKnife</name>
   <url>http://maven.apache.org</url>
   <modules>
-    <module>server</module>
     <module>common</module>
+    <module>server</module>
     <module>client</module>
   </modules>
 </project>
