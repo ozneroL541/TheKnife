@@ -55,7 +55,5 @@ public class ClientTK extends Application {
     public void stop() {
         // Perform any cleanup operations here
         System.out.println("TheKnife client application is shutting down...");
-
-        // TODO: Add any cleanup code for RMI or network connections
     }
 }
