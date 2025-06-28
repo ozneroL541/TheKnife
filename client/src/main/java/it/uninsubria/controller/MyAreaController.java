@@ -4,7 +4,6 @@ import it.uninsubria.controller.ui_components.GenericResultsComponent;
 import it.uninsubria.dto.RestaurantDTO;
 import it.uninsubria.services.RestaurantService;
 import it.uninsubria.session.UserSession;
-import it.uninsubria.utilclient.ClientUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +19,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -345,7 +343,7 @@ public class MyAreaController {
     /**
      * Handles the action button click.
      * For clients: navigates to search view.
-     * For restaurateurs: opens restaurant registration (TODO).
+     * For restaurateurs: opens restaurant registration.
      */
     @FXML
     private void handleActionButton() {
@@ -441,47 +439,6 @@ public class MyAreaController {
             statusLabel.setText("Error returning to login: " + e.getMessage());
         }
     }
-
-    // Mock data methods - TODO: Replace with actual RMI calls
-
-    /**
-     * Returns mock favorite restaurants for testing.
-     * TODO: Replace with actual RMI call to RestaurantService.getFavoriteRestaurants()
-     *
-     * @return List of mock favorite restaurants
-     */
-    private List<RestaurantDTO> getMockFavoriteRestaurants() {
-        List<RestaurantDTO> restaurants = ClientUtil.getRestaurantList();
-        // Return first 2 restaurants as favorites
-        return restaurants.subList(0, Math.min(2, restaurants.size()));
-    }
-
-    /**
-     * Returns mock reviewed restaurants for testing.
-     * TODO: Replace with actual RMI call to RestaurantService.getReviewedRestaurants()
-     *
-     * @return List of mock reviewed restaurants
-     */
-    private List<RestaurantDTO> getMockReviewedRestaurants() {
-        List<RestaurantDTO> restaurants = ClientUtil.getRestaurantList();
-        // Return restaurants 2-4 as reviewed
-        int start = Math.min(2, restaurants.size());
-        int end = Math.min(4, restaurants.size());
-        return restaurants.subList(start, end);
-    }
-
-    /**
-     * Returns mock owned restaurants for testing.
-     * TODO: Replace with actual RMI call to RestaurantService.getOwnedRestaurants()
-     *
-     * @return List of mock owned restaurants
-     */
-    private List<RestaurantDTO> getMockOwnedRestaurants() {
-        List<RestaurantDTO> restaurants = ClientUtil.getRestaurantList();
-        // Return first 3 restaurants as owned
-        return restaurants.subList(0, Math.min(3, restaurants.size()));
-    }
-
     /**
      * Refreshes all user data.
      * Can be called after making changes to favorites, reviews, or restaurants.

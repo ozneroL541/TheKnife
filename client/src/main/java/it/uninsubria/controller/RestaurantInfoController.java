@@ -348,7 +348,7 @@ public class RestaurantInfoController {
         } else {
             // For non-owners, just log the click (future: could open review detail view)
             LOGGER.info("Review clicked: " + review.getUsername() + " - " + review.getRating() + " stars");
-            System.out.println("Review clicked: " + review.getUsername() + " - " + review.getRating() + " stars");
+            //System.out.println("Review clicked: " + review.getUsername() + " - " + review.getRating() + " stars");
         }
     }
 

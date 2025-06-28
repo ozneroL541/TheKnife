@@ -3,14 +3,9 @@ package it.uninsubria.controller;
 import it.uninsubria.controller.ui_components.GenericResultsComponent;
 import it.uninsubria.dto.CuisineType;
 import it.uninsubria.dto.RestaurantDTO;
-import it.uninsubria.dto.ReviewDTO;
 import it.uninsubria.dto.SearchCriteriaDTO;
-import it.uninsubria.controller.LoginController;
 import it.uninsubria.services.RestaurantService;
-import it.uninsubria.services.UserService;
 import it.uninsubria.session.UserSession;
-import it.uninsubria.utilclient.ClientUtil;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,7 +19,6 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -62,7 +56,6 @@ public class SearchController {
     // Navigation and action buttons
     @FXML private Button userAreaButton;
     @FXML private Button logoutButton;
-    @FXML private Button searchButton;
     // Status indicator
     @FXML private Label statusLabel;
     // Result Pane
@@ -91,8 +84,20 @@ public class SearchController {
         initializePriceControls();
         initializeStarRating();
         initializeResultsComponent();
+        initializeMyAreaButton();
         // Set default status
         updateStatus("Ready to search");
+    }
+
+    private void initializeMyAreaButton() {
+        if (userSession == null || !userSession.isLoggedIn()) {
+            userAreaButton.setVisible(false);
+            userAreaButton.setManaged(false);
+        } else {
+            userAreaButton.setVisible(true);
+            userAreaButton.setManaged(true);
+            userAreaButton.setOnAction(event -> handleUserArea());
+        }
     }
 
     private void initServices() {
@@ -149,7 +154,7 @@ public class SearchController {
 
         // use service to get results
         SearchCriteriaDTO searchCriteria = buildSearchCriteria();
-        List<RestaurantDTO> restaurants = null;
+        List<RestaurantDTO> restaurants;
         try {
             restaurants = restaurantService.searchRestaurants(searchCriteria);
         } catch (RemoteException e) {
@@ -198,7 +203,7 @@ public class SearchController {
         SearchCriteriaDTO.Builder builder = SearchCriteriaDTO.builder()
                 .coordinates(latitude, longitude)
                 .priceRange(minPrice > 0 ? minPrice : null, maxPrice < 300 ? maxPrice : null)
-                .minRating((Integer) currentRatingSelection);
+                .minRating(currentRatingSelection);
 
         // Add optional criteria
         if (cuisineTypeComboBox.getValue() != null) {
@@ -349,7 +354,7 @@ public class SearchController {
             }
         });
         // Add an "Any" option at the beginning
-        cuisineTypeComboBox.getItems().add(0, null);
+        cuisineTypeComboBox.getItems().addFirst(null);
         cuisineTypeComboBox.getSelectionModel().selectFirst();
     }
 

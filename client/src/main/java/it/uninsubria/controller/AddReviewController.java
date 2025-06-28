@@ -112,7 +112,7 @@ public class AddReviewController {
         // Hide delete button for new reviews
         deleteButton.setVisible(false);
 
-        LOGGER.info("Set restaurant for new review: " + restaurant.getR_name() + ", delete button hidden");
+        LOGGER.info("Set restaurant for new review: " + restaurant.getR_name());
     }
 
     /**
@@ -199,9 +199,7 @@ public class AddReviewController {
             star.setText("★");
 
             // Add style change listeners
-            star.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                star.setStyle(newValue ? selectedStyle : unselectedStyle);
-            });
+            star.selectedProperty().addListener((observable, oldValue, newValue) -> star.setStyle(newValue ? selectedStyle : unselectedStyle));
         }
     }
 

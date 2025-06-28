@@ -87,10 +87,10 @@ public class UserSession {
      * @return true if the current user is a client, false otherwise
      */
     public boolean isClient() {
-        System.out.println(currentUser.getRole());
-        System.out.println(isLoggedIn);
-        System.out.println(currentUser != null);
-        System.out.println("client".equalsIgnoreCase(currentUser != null ? currentUser.getRole() : null));
+        //System.out.println(currentUser.getRole());
+        //System.out.println(isLoggedIn);
+        //System.out.println(currentUser != null);
+        //System.out.println("client".equalsIgnoreCase(currentUser != null ? currentUser.getRole() : null));
         return isLoggedIn && currentUser != null && "client".equalsIgnoreCase(currentUser.getRole());
     }
 
@@ -120,7 +120,7 @@ public class UserSession {
     public double[] getUserCoordinates() {
         if (currentUser != null && currentUser.getAddress() != null &&
                 currentUser.getAddress().getLatitude() != null && currentUser.getAddress().getLongitude() != null) {
-            System.out.println("returned:"+ currentUser.getAddress().getLatitude() + currentUser.getAddress().getLongitude());
+            //System.out.println("returned:\t"+ currentUser.getAddress().getLatitude() + "\t" + currentUser.getAddress().getLongitude());
             return new double[] {currentUser.getAddress().getLatitude(), currentUser.getAddress().getLongitude()};
         }
         return null;

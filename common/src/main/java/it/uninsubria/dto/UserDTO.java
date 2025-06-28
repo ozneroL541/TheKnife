@@ -200,7 +200,7 @@ public class UserDTO implements Serializable {
      * @return role
      */
     public String getRole() {
-        return role.getDisplayName().toLowerCase();
+        return role == null? "null": role.getDisplayName().toLowerCase();
     }
 
     /**
