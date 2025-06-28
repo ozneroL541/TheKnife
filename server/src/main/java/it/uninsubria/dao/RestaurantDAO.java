@@ -66,41 +66,41 @@ public class RestaurantDAO {
 
         // Add filtering conditions (excluding coordinates since we use distance)
         if (criteria.getCuisineType() != null) {
-            query.append("WHERE r_type::text = ? ");
+            query.append(" WHERE r_type::text = ?");
             hasWhere = true;
         }
 
         if (criteria.getMinPrice() != null) {
-            query.append(hasWhere ? "AND " : "WHERE ");
+            query.append(hasWhere ? " AND " : " WHERE ");
             query.append("avg_price >= ? ");
             hasWhere = true;
         }
 
         if (criteria.getMaxPrice() != null) {
-            query.append(hasWhere ? "AND " : "WHERE ");
+            query.append(hasWhere ? " AND " : " WHERE ");
             query.append("avg_price <= ? ");
             hasWhere = true;
         }
 
         if (criteria.getDeliveryAvailable() != null) {
-            query.append(hasWhere ? "AND " : "WHERE ");
+            query.append(hasWhere ? " AND " : " WHERE ");
             query.append("delivery = ? ");
             hasWhere = true;
         }
 
         if (criteria.getOnlineBookingAvailable() != null) {
-            query.append(hasWhere ? "AND " : "WHERE ");
+            query.append(hasWhere ? " AND " : " WHERE ");
             query.append("booking = ? ");
             hasWhere = true;
         }
 
         if (criteria.getMinRating() != null) {
-            query.append(hasWhere ? "AND " : "WHERE ");
+            query.append(hasWhere ? " AND " : " WHERE ");
             query.append("(SELECT AVG(rating) FROM reviews rev WHERE rev.restaurant_id = restaurants.restaurant_id) >= ? ");
         }
 
         // Order by distance and limit to 10 closest restaurants
-        query.append("ORDER BY distance ASC LIMIT 10;");
+        query.append(" ORDER BY distance ASC LIMIT 25;");
 
         return query.toString();
     }
@@ -320,7 +320,7 @@ public class RestaurantDAO {
         Connection conn = DBConnection.getConnection();
 
         // Get address ID
-        int addressId = AddressDAO.getAddressId(restaurant.getAddress());
+        int addressId = AddressDAO.insert(restaurant.getAddress());
 
         // Get next restaurant ID
         int id;

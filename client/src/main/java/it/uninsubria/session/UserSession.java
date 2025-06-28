@@ -90,9 +90,8 @@ public class UserSession {
         System.out.println(currentUser.getRole());
         System.out.println(isLoggedIn);
         System.out.println(currentUser != null);
-        System.out.println("client".equalsIgnoreCase(currentUser.getRole()));
-        return isLoggedIn && currentUser != null &&
-                "client".equalsIgnoreCase(currentUser.getRole());
+        System.out.println("client".equalsIgnoreCase(currentUser != null ? currentUser.getRole() : null));
+        return isLoggedIn && currentUser != null && "client".equalsIgnoreCase(currentUser.getRole());
     }
 
     /**

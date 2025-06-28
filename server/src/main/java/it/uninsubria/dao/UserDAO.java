@@ -1,6 +1,7 @@
 package it.uninsubria.dao;
 
 import it.uninsubria.DBConnection;
+import it.uninsubria.dto.AddressDTO;
 import it.uninsubria.dto.UserDTO;
 import it.uninsubria.dto.UserRoleDTO;
 
@@ -41,7 +42,6 @@ public class UserDAO {
         try (PreparedStatement stmt = conn.prepareStatement(QUERY_GET_USER_BY_USERID)) {
             // Set the parameter (username)
             stmt.setString(1, usr);
-
             // Execute the query
             try (ResultSet rs = stmt.executeQuery()) {
                 // Check if user was found
@@ -54,9 +54,11 @@ public class UserDAO {
                     System.out.println(surname);
                     Date birthDate = rs.getDate("birth_date");  // Can be null
                     String roleString = rs.getString("role");
+                    Integer addressId = rs.getInt("address_id");
+                    AddressDTO address = AddressDAO.getAddress(addressId); // Retrieve address by ID
                     UserRoleDTO role = UserRoleDTO.fromDisplayName(roleString);  // ENUM converted to String
                     // Create and return UserDTO with all available information
-                    return new UserDTO(username, hashedPassword, name, surname, birthDate, role);
+                    return new UserDTO(username, hashedPassword, name, surname, birthDate, role, address);
                 } else {
                     // User not found
                     System.out.println("not entering");

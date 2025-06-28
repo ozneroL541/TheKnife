@@ -54,7 +54,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             throw new UserException("User already exists"); // to handle better, maybe custom exception
         }
         // add address to database and get address id
-        Integer addressId = AddressDAO.getAddressId(userData.getAddress());
+        Integer addressId = AddressDAO.insert(userData.getAddress());
         // add user to database
         try {
             UserDAO.addUser(userData, addressId);

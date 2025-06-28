@@ -20,7 +20,7 @@ public class AddressDAO {
      * @return the ID of the inserted address
      * @throws AddressException if an error occurs while inserting or retrieving the address ID
      */
-    public static synchronized Integer getAddressId(AddressDTO address) throws AddressException {
+    public static synchronized Integer insert(AddressDTO address) throws AddressException {
         final String insertAddressSQL = """
                 INSERT INTO addresses (address_id,
                 country, city, street, house_number, latitude, longitude) VALUES ((
@@ -66,7 +66,7 @@ public class AddressDAO {
      * @param addressId the ID of the address to retrieve
      * @return AddressDTO containing the address details, or null if not found
      */
-    public static synchronized AddressDTO getAddress(int addressId) {
+    public static synchronized AddressDTO getAddress(Integer addressId) {
         final String getAddressSQL = "SELECT country, city, street, house_number, latitude, longitude " +
                 "FROM addresses " +
                 "WHERE address_id = ?;";

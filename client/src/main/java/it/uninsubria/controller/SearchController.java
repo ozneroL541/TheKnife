@@ -52,6 +52,7 @@ public class SearchController {
     @FXML private CheckBox deliveryCheckBox;
     @FXML private CheckBox onlineBookingCheckBox;
     // Star rating toggles
+    @FXML private ToggleButton star0Button;
     @FXML private ToggleButton star1Button;
     @FXML private ToggleButton star2Button;
     @FXML private ToggleButton star3Button;
@@ -85,7 +86,7 @@ public class SearchController {
 
         initServices();
         // Initialize UI
-        starButtons = new ToggleButton[]{star1Button, star2Button, star3Button, star4Button, star5Button};
+        starButtons = new ToggleButton[]{star0Button, star1Button, star2Button, star3Button, star4Button, star5Button};
         initializeCuisineTypes();
         initializePriceControls();
         initializeStarRating();
@@ -416,10 +417,10 @@ public class SearchController {
      */
     private void initializeStarRating() {
         // Initialize with 1 star selected
-        updateStarSelection(1);
+        updateStarSelection(0);
         // Add click handlers for each star button
         for (int i = 0; i < starButtons.length; i++) {
-            final int starValue = i + 1;
+            final int starValue = i;
             starButtons[i].setOnAction(event -> updateStarSelection(starValue));
         }
     }
@@ -430,7 +431,7 @@ public class SearchController {
      * @param rating The rating value (1-5)
      */
     private void updateStarSelection(int rating) {
-        if (rating < 1 || rating > 5) {
+        if (rating < 0 || rating > 5) {
             return;
         }
 
@@ -439,10 +440,10 @@ public class SearchController {
 
         // Update star button states (selected up to the rating value)
         for (int i = 0; i < starButtons.length; i++) {
-            starButtons[i].setSelected(i < rating);
+            starButtons[i].setSelected(i <= rating);
         }
 
         // Update rating label
-        ratingLabel.setText((rating-1) + ".0+ stars");
+        ratingLabel.setText((rating) + "+ stars");
     }
 }
