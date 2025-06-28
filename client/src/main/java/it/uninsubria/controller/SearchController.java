@@ -96,7 +96,7 @@ public class SearchController {
 
     private void initServices() {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            Registry registry = ServerAddress.getRegistry();
             restaurantService= (RestaurantService) registry.lookup("RestaurantService");
         } catch (NotBoundException | RemoteException e) {
             System.err.println("Error connecting to UserService: " + e.getMessage());

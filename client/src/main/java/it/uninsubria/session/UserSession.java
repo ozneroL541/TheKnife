@@ -119,7 +119,7 @@ public class UserSession {
      * @return An array containing latitude and longitude, or null if no user is logged in
      */
     public double[] getUserCoordinates() {
-        if (currentUser != null &&
+        if (currentUser != null && currentUser.getAddress() != null &&
                 currentUser.getAddress().getLatitude() != null && currentUser.getAddress().getLongitude() != null) {
             System.out.println("returned:"+ currentUser.getAddress().getLatitude() + currentUser.getAddress().getLongitude());
             return new double[] {currentUser.getAddress().getLatitude(), currentUser.getAddress().getLongitude()};

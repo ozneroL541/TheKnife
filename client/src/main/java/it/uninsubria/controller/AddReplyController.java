@@ -63,7 +63,7 @@ public class AddReplyController {
 
     private void initServices() {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            Registry registry = ServerAddress.getRegistry();
             reviewService = (ReviewService) registry.lookup("ReviewService");
         } catch (NotBoundException | RemoteException e) {
             System.err.println("Error connecting to ReviewService: " + e.getMessage());

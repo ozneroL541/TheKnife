@@ -18,7 +18,6 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -77,7 +76,7 @@ public class AddRestaurantController {
 
     private void initServices() {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            Registry registry = ServerAddress.getRegistry();
             restaurantService = (RestaurantService) registry.lookup("RestaurantService");
         } catch (NotBoundException | RemoteException e) {
             System.err.println("Error connecting to UserService: " + e.getMessage());

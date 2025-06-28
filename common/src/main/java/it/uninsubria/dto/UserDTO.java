@@ -134,12 +134,13 @@ public class UserDTO implements Serializable {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "usr_id='" + username + '\'' +
-                ", password_pt='" + password + '\'' +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", birth_date=" + birth_date +
                 ", role='" + role + '\'' +
+                ", address=" + (address != null? address.toString(): "null") +
                 '}';
     }
     public Boolean verifyPassword(String h_password) {
