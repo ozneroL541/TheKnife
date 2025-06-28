@@ -135,10 +135,10 @@ public class RestaurantInfoController {
      */
     private void updateDistanceDisplay() {
         if (userSession.isLoggedIn()) {
-            double[] userCoords = userSession.getUserCoordinates();
-            if (userCoords != null) {
+            double[] userCoordinates = userSession.getUserCoordinates();
+            if (userCoordinates != null) {
                 double distance = ClientUtil.calculateDistance(
-                        userCoords[0], userCoords[1],
+                        userCoordinates[0], userCoordinates[1],
                         restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude());
                 distanceLabel.setText(String.format("%.1f km from your location", distance));
             } else {
@@ -383,8 +383,6 @@ public class RestaurantInfoController {
 
             // After the window closes, refresh reviews to show the updated reply
             loadReviews();
-            // può servire un metodo per cambiare il pulsante a update review..
-
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error loading reply view", e);
         }

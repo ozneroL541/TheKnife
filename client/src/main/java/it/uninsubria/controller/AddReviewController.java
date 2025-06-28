@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class AddReviewController {
 
     private static final Logger LOGGER = Logger.getLogger(AddReviewController.class.getName());
-    private static final int MAX_REVIEW_LENGTH = 1000; // Maximum review length
+    private static final int MAX_REVIEW_LENGTH = 256; // Maximum review length
 
     // FXML components
     @FXML private Label titleLabel;
@@ -257,14 +257,8 @@ public class AddReviewController {
             showError("You must be logged in to write a review.");
             return false;
         }
-
         // Check if review text is provided
         String reviewText = reviewTextArea.getText().trim();
-        if (reviewText.isEmpty()) {
-            showError("Please write a review before submitting.");
-            return false;
-        }
-
         // Check text length
         if (reviewText.length() > MAX_REVIEW_LENGTH) {
             showError("Review text exceeds maximum length of " + MAX_REVIEW_LENGTH + " characters.");
