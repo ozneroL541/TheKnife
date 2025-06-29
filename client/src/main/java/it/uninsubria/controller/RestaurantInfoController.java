@@ -134,18 +134,14 @@ public class RestaurantInfoController {
      * Updates the distance display based on user location.
      */
     private void updateDistanceDisplay() {
-        if (userSession.isLoggedIn()) {
-            double[] userCoordinates = userSession.getUserCoordinates();
-            if (userCoordinates != null) {
-                double distance = ClientUtil.calculateDistance(
-                        userCoordinates[0], userCoordinates[1],
-                        restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude());
-                distanceLabel.setText(String.format("%.1f km from your location", distance));
-            } else {
-                distanceLabel.setText("Distance: Location not available");
-            }
+        double[] userCoordinates = userSession.getUserCoordinates();
+        if (userCoordinates != null) {
+            double distance = ClientUtil.calculateDistance(
+                    userCoordinates[0], userCoordinates[1],
+                    restaurant.getAddress().getLatitude(), restaurant.getAddress().getLongitude());
+            distanceLabel.setText(String.format("%.1f km from your location", distance));
         } else {
-            distanceLabel.setText("Distance: Login to see distance");
+            distanceLabel.setText("Distance: Location not available");
         }
     }
 

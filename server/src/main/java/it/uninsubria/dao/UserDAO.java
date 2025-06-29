@@ -61,7 +61,7 @@ public class UserDAO {
                     return new UserDTO(username, hashedPassword, name, surname, birthDate, role, address);
                 } else {
                     // User not found
-                    System.out.println("not entering");
+                    System.out.println("User not found: " + usr);
                     return null;
                 }
             }

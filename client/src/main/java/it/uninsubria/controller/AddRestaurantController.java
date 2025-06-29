@@ -70,7 +70,6 @@ public class AddRestaurantController {
         // not needed necessarily
         if (!userSession.isLoggedIn() || !userSession.isOwner()) {
             handleCancel();
-            return;
         }
     }
 
@@ -222,7 +221,7 @@ public class AddRestaurantController {
             errors.append("Longitude is required.\n");
         }
         // Display error message if any required fields are missing
-        if (errors.length() > 0) {
+        if (!errors.isEmpty()) {
             errorLabel.setText(errors.toString());
             return false;
         }
@@ -264,7 +263,7 @@ public class AddRestaurantController {
             errors.append("Longitude must be a valid number.\n");
         }
         // Display error message if any numeric fields are invalid
-        if (errors.length() > 0) {
+        if (!errors.isEmpty()) {
             errorLabel.setText(errors.toString());
             return false;
         }

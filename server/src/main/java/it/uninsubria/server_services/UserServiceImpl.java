@@ -3,6 +3,7 @@ package it.uninsubria.server_services;
 import it.uninsubria.dao.AddressDAO;
 import it.uninsubria.dto.UserDTO;
 import it.uninsubria.dao.UserDAO;
+import it.uninsubria.exceptions.AddressException;
 import it.uninsubria.exceptions.UserException;
 import it.uninsubria.services.UserService;
 
@@ -50,15 +51,23 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
     @Override
     public synchronized void register(UserDTO userData) throws RemoteException, UserException {
         // check if user already exists
-        if (UserDAO.getUserByID(userData.getUsername()) != null) { // magari mettere un altro check più veloce
-            throw new UserException("User already exists"); // to handle better, maybe custom exception
+        if (UserDAO.getUserByID(userData.getUsername()) != null) {
+            System.err.println("Registration attempt failed: User already exists - " + userData.getUsername());
+            throw new UserException("Username already exists"); // to handle better, maybe custom exception
         }
-        // add address to database and get address id
-        Integer addressId = AddressDAO.insert(userData.getAddress());
+        Integer addressId = null;
+        try {
+            // add address to database and get address id
+            addressId = AddressDAO.insert(userData.getAddress());
+        } catch (AddressException e) {
+            System.err.println("Registration attempt failed: Error inserting address - " + userData.getAddress());
+            throw new UserException("Invalid address");
+        }
         // add user to database
         try {
             UserDAO.addUser(userData, addressId);
         } catch (SQLException e) {
+            System.err.println("Registration attempt failed: Error adding user to database - " + userData.getUsername());
             throw new RemoteException("Error adding user to database");
         }
     }

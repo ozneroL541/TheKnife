@@ -1,7 +1,7 @@
 package it.uninsubria.controller;
 
 import it.uninsubria.dto.UserDTO;
-import it.uninsubria.dto.UserRoleDTO;
+import it.uninsubria.exceptions.UserException;
 import it.uninsubria.services.UserService;
 import it.uninsubria.session.UserSession;
 import javafx.collections.FXCollections;
@@ -41,7 +41,7 @@ public class RegistrationController {
     // Personal information
     @FXML private TextField nameField;
     @FXML private TextField surnameField;
-    // Birth date components
+    // Birthdate components
     @FXML private ComboBox<Integer> dayComboBox;
     @FXML private ComboBox<String> monthComboBox;
     @FXML private ComboBox<Integer> yearComboBox;
@@ -121,6 +121,16 @@ public class RegistrationController {
 
         try {
             userService.register(toSend);
+
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration Successful");
+            alert.setHeaderText("Welcome to TheKnife!");
+            alert.setContentText("Your account has been created successfully. You can now log in.");
+            alert.showAndWait();
+
+            // Navigate back to log in
+            handleBack();
         } catch (RemoteException e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registration Fail");
@@ -129,17 +139,12 @@ public class RegistrationController {
             alert.showAndWait();
 
             throw new RuntimeException(e);
+        } catch (UserException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Registration Fail");
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
         }
-
-        // Show success message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Registration Successful");
-        alert.setHeaderText("Welcome to TheKnife!");
-        alert.setContentText("Your account has been created successfully. You can now log in.");
-        alert.showAndWait();
-
-        // Navigate back to login
-        handleBack();
     }
 
     /**
@@ -216,6 +221,16 @@ public class RegistrationController {
         if (surnameField.getText().trim().isEmpty()) {
             errors.append("Surname is required.\n");
         }
+        // Check birthdate information
+        if (dayComboBox.getValue() == null) {
+            errors.append("Day is required.\n");
+        }
+        if (monthComboBox.getValue() == null) {
+            errors.append("Month is required.\n");
+        }
+        if (yearComboBox.getValue() == null) {
+            errors.append("Year is required.\n");
+        }
         // Check location information
         if (countryField.getText().trim().isEmpty()) {
             errors.append("Country is required.\n");
@@ -233,7 +248,7 @@ public class RegistrationController {
             errors.append("Longitude is required.\n");
         }
         // Display error message if any required fields are missing
-        if (errors.length() > 0) {
+        if (!errors.isEmpty()) {
             errorLabel.setText(errors.toString());
             return false;
         }
@@ -266,7 +281,7 @@ public class RegistrationController {
             errors.append("Longitude must be a valid number.\n");
         }
         // Display error message if any numeric fields are invalid
-        if (errors.length() > 0) {
+        if (!errors.isEmpty()) {
             errorLabel.setText(errors.toString());
             return false;
         }
@@ -310,9 +325,9 @@ public class RegistrationController {
      */
     private void updateDaysBasedOnMonthAndYear() {
         Integer selectedYear = yearComboBox.getValue();
-        Integer selectedMonthIndex = monthComboBox.getSelectionModel().getSelectedIndex();
+        int selectedMonthIndex = monthComboBox.getSelectionModel().getSelectedIndex();
 
-        if (selectedMonthIndex != null && selectedYear != null) {
+        if (selectedYear != null) {
             // Month in YearMonth is 1-based
             YearMonth yearMonth = YearMonth.of(selectedYear, selectedMonthIndex + 1);
             int daysInMonth = yearMonth.lengthOfMonth();

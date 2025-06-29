@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class AddReplyController {
 
     private static final Logger LOGGER = Logger.getLogger(AddReplyController.class.getName());
-    private static final int MAX_REPLY_LENGTH = 800; // Maximum reply length
+    private static final int MAX_REPLY_LENGTH = 256; // Maximum reply length
     // Header components
     @FXML private Label restaurantNameLabel;
     // Original review display components
