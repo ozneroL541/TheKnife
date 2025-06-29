@@ -23,7 +23,18 @@ public class ClientTK extends Application {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        // Set JavaFX system properties to avoid module path issues
+        System.setProperty("javafx.preloader", "");
+        System.setProperty("java.awt.headless", "false");
+
+        // Ensure JavaFX platform is properly initialized
+        try {
+            // Launch the actual JavaFX application
+            launch(args);
+        } catch (Exception e) {
+            System.err.println("Failed to launch application: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
     /**

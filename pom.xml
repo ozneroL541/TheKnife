@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.uninsubria</groupId>
   <artifactId>TheKnife</artifactId>
@@ -7,9 +7,88 @@
   <packaging>pom</packaging>
   <name>TheKnife</name>
   <url>http://maven.apache.org</url>
+
   <modules>
     <module>common</module>
     <module>server</module>
     <module>client</module>
   </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>15</maven.compiler.release>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Copy JARs to bin directory after packaging -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>create-bin-directory</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="${project.basedir}/bin"/>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-jars-to-bin</id>
+            <phase>install</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <!-- Copy server JAR -->
+                <copy file="${project.basedir}/server/target/server-${project.version}-jar-with-dependencies.jar"
+                      tofile="${project.basedir}/bin/Server.jar"
+                      failonerror="false"/>
+
+                <!-- Copy client shaded JAR (the executable one) -->
+                <copy file="${project.basedir}/bin/ClientTK.jar"
+                      tofile="${project.basedir}/bin/ClientTK.jar"
+                      failonerror="false"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Define dependency management for child modules -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.13.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>de.mkammerer</groupId>
+        <artifactId>argon2-jvm</artifactId>
+        <version>2.11</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.7.5</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

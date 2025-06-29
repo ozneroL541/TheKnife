@@ -17,7 +17,7 @@ import java.rmi.registry.Registry;
  * @author Lorenzo Radice
  * @version 1.0.0
  */
-public class Server {
+public class ServerTK {
     /** Version of the application */
     private static final String version = "1.0.0";
     /** Application title */

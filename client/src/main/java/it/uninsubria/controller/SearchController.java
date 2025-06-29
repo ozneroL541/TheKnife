@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -354,7 +355,7 @@ public class SearchController {
             }
         });
         // Add an "Any" option at the beginning
-        cuisineTypeComboBox.getItems().addFirst(null);
+        cuisineTypeComboBox.getItems();
         cuisineTypeComboBox.getSelectionModel().selectFirst();
     }
 

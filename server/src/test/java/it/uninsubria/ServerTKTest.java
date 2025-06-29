@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ServerTest {
+class ServerTKTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
@@ -29,7 +29,7 @@ class ServerTest {
     }
     @Test
     void testShowHelpOption() {
-        Server.main(new String[]{"--help"});
+        ServerTK.main(new String[]{"--help"});
         String output = outContent.toString();
         assertTrue(output.contains("Usage: java -jar TheKnifeServer.jar"));
         assertTrue(output.contains("--help"));
@@ -38,14 +38,14 @@ class ServerTest {
 
     @Test
     void testShowHelpShortOption() {
-        Server.main(new String[]{"-h"});
+        ServerTK.main(new String[]{"-h"});
         String output = outContent.toString();
         assertTrue(output.contains("Usage: java -jar TheKnifeServer.jar"));
     }
 
     @Test
     void testShowVersionOption() {
-        Server.main(new String[]{"--version"});
+        ServerTK.main(new String[]{"--version"});
         String output = outContent.toString();
         assertTrue(output.contains("TheKnife Server"));
         assertTrue(output.contains("1.0.0"));
@@ -53,7 +53,7 @@ class ServerTest {
 
     @Test
     void testShowVersionShortOption() {
-        Server.main(new String[]{"-v"});
+        ServerTK.main(new String[]{"-v"});
         String output = outContent.toString();
         assertTrue(output.contains("TheKnife Server"));
         assertTrue(output.contains("1.0.0"));
