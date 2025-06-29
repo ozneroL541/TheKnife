@@ -355,7 +355,7 @@ public class SearchController {
             }
         });
         // Add an "Any" option at the beginning
-        cuisineTypeComboBox.getItems();
+        cuisineTypeComboBox.getItems().addFirst(null);
         cuisineTypeComboBox.getSelectionModel().selectFirst();
     }
 
