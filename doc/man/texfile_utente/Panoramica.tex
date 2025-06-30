@@ -1,0 +1,16 @@
+\section{Panoramica del Sistema}
+\label{cap:panoramica}
+\subsection{Architettura generale}
+\emph{TheKnife} adotta un'architettura client–server modulare:
+\begin{itemize}
+    \item \textbf{Server backend:} implementato in Java 24, espone servizi Registry RMI e gestisce la logica di persistenza su PostgreSQL.
+    \item \textbf{Client desktop:} applicazione JavaFX che interagisce con il server tramite JavaRMI.
+    \item \textbf{Database:} PostgreSQL 13+ come DBMS
+\end{itemize}
+
+\subsection{Tecnologie e librerie}
+\begin{description}
+    \item[PostgreSQL 13+] Sistema di gestione del database open source.
+    \item[JavaFX] Libreria per l'interfaccia grafica (client).
+    \item[argon2] Algoritmo di hashing per la sicurezza delle password.
+\end{description}

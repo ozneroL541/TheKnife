@@ -1,0 +1,188 @@
+\section{Sviluppo}
+\subsection{Architettura}
+Il sistema utilizza un'architettura client-server basata su 
+RMI (Remote Method Invocation) per la comunicazione tra client 
+e server.
+Il server si interfaccia con un database PostgreSQL tramite JDBC,
+gestendo la logica di persistenza tramite DAO (Data Access Object).
+Il client, sviluppato in JavaFX, implementa il pattern MVC (Model-View-Controller)
+per la gestione dell'interfaccia utente e delle interazioni.
+\subsection{Database}
+\subsubsection{Configurazione e connessione}
+\label{sec:db-connessione}
+Il sistema utilizza PostgreSQL 13+ con il driver JDBC.
+Durante la compilazione è richiesto che l'utente \textit{postgre},
+con password \textit{postgre}, abbia i permessi per creare un 
+nuovo database e corrispetttivo utente \textit{theknife}.\\
+Il database creato avrà i seguenti parametri di connessione:
+\begin{itemize}
+    \item \textbf{Database} \texttt{\detokenize{theknife_db}}
+    \item \textbf{User:} \texttt{theknife}
+    \item \textbf{Password:} \texttt{password}
+    \item \textbf{Host:} \texttt{localhost}
+    \item \textbf{Port:} \texttt{5432}
+\end{itemize}
+
+\subsubsection{Struttura delle tabelle}
+\begin{description}
+Di seguito riportata la struttura delle tabelle del database,
+con le chiavi primarie sottolineate e le chiavi esterne in notazione \texttt{tabella\textsuperscript{riferimento}}.
+Le tabelle sono state create in modo da rispettare le relazioni definite nel diagramma ER.\\
+Per la creazione delle tabelle e il popolamento iniziale del database sono stati utilizzati script SQL.
+\begin{itemize}
+    \item \textbf{addresses} (\underline{address\_id}, country, city, street, house\_number, latitude, longitude)
+    \item \textbf{users} (\underline{username}, h\_password, name, surname, birth\_date, role, address\_id\textsuperscript{addresses})
+    \item \textbf{restaurants} (\underline{restaurant\_id}, r\_owner, r\_name, avg\_price, delivery, booking, r\_type, address\_id\textsuperscript{addresses})
+    \item \textbf{favorites} (\underline{username\textsuperscript{users}, restaurant\_id\textsuperscript{restaurants}})
+    \item \textbf{reviews} (\underline{username\textsuperscript{users}, restaurant\_id\textsuperscript{restaurants}}, rating, comment, reply)
+\end{itemize}
+\end{description}
+Le password di tutti gli utenti sono cifrate con Argon2, 
+un algoritmo di hashing sicuro resistente agli attacchi di 
+forza bruta, anche parallelizzati.
+
+\subsubsection{Inizializzazione}
+L'uso di \texttt{sql-maven-plugin} permette di gestire le seguenti funzioni.
+\begin{enumerate}
+  \item Creazione database e utente (\texttt{create\_database.sql}).
+  \item Creazione tabelle (script: \texttt{addresses.sql}, \dots, \texttt{reviews.sql}).
+  \item Popolamento con dati di esempio (\texttt{samples/}).
+\end{enumerate}
+
+\subsection{Data Access Object - DAO}
+\label{sec:dao}
+Si è adottato il pattern DAO per isolare la logica di persistenza.\\
+Le funzionalità garantite da tale pattern sono:
+\begin{itemize}
+  \item \textbf{UserDAO}: autenticazione, registrazione, gestione profilo.
+  \item \textbf{RestaurantDAO}: ricerca avanzata, preferiti, gestione ristoranti.
+  \item \textbf{ReviewDAO}: creazione/modifica/cancellazione recensioni e risposte.
+\end{itemize}
+
+\paragraph{UserDAO}
+\begin{itemize}
+    \item \textbf{Autenticazione}: Verifica delle credenziali durante il processo di login, con controllo della password cifrata
+    \item \textbf{Registrazione}: Inserimento di nuovi utenti nel sistema con validazione dei dati e cifratura della password
+    \item \textbf{Gestione profili}: Operazioni di lettura e aggiornamento delle informazioni utente
+    \item \textbf{Controllo ruoli}: Distinzione tra utenti clienti e ristoratori per l'autorizzazione delle operazioni
+\end{itemize}
+
+\paragraph{RestaurantDAO}
+\begin{itemize}
+    \item \textbf{Ricerca parametrica}: Implementazione della funzione \texttt{searchRestaurant()} con filtri multipli per:
+    \begin{itemize}
+        \item Tipologia di cucina
+        \item Localizzazione geografica (parametro obbligatorio)
+        \item Fascia di prezzo
+        \item Disponibilità servizio delivery
+        \item Disponibilità prenotazione online
+        \item Rating minimo
+    \end{itemize}
+    \item \textbf{Gestione ristoranti}: Creazione dei ristoranti
+    \item \textbf{Calcolo metriche}: Aggregazione di dati per rating medio e numero recensioni
+\end{itemize}
+
+\paragraph{ReviewDAO}
+\begin{itemize}
+    \item \textbf{Gestione recensioni}: Operazioni CRUD (Create, Read, Update, Delete) per le recensioni
+    \item \textbf{Risposte ristoratori}: Implementazione di \texttt{replyToReview()} con controllo autorizzazioni
+    \item \textbf{Visualizzazione}: Recupero recensioni per ristorante con \texttt{getReviews()}
+    \item \textbf{Aggregazioni}: Calcolo rating medio e conteggio recensioni per ristorante
+\end{itemize}
+
+\paragraph{FavoritesDAO}
+\begin{itemize}
+    \item \textbf{Aggiunta preferiti}: Implementazione di \texttt{addFavorite()}
+    \item \textbf{Rimozione preferiti}: Implementazione di \texttt{removeFavorite()}
+    \item \textbf{Visualizzazione}: Recupero lista ristoranti preferiti con \texttt{getFavorites()}
+\end{itemize}
+
+\paragraph{Prepared Statements}
+Tutte le query utilizzano PreparedStatement per prevenire SQL injection e migliorare le performance attraverso il caching delle query compilate.
+
+\subsection{Architettura RMI}
+\label{sec:rmi}
+Il sistema TheKnife implementa un'architettura distribuita client-server basata su Java
+RMI (Remote Method Invocation) per gestire la comunicazione tra i client e il server.
+Questa scelta architetturale permette di separare la logica di presentazione (client) dalla
+logica di business e accesso ai dati (server), garantendo scalabilit`a e manutenibilit`a del
+sistema.
+\subsection{Struttura}
+\paragraph{Registry RMI}
+Il server TheKnife utilizza il registry RMI per registrare i servizi disponibili ai client. Il registry viene avviato sulla porta standard 1099 e permette ai client di ottenere riferimenti remoti ai servizi tramite lookup per nome.
+
+\paragraph{Interfacce Remote}
+Tutte le interfacce di servizio estendono \texttt{java.rmi.Remote} e dichiarano che i metodi possono lanciare \texttt{RemoteException}. Questa struttura garantisce la trasparenza della distribuzione per i client che invocano metodi remoti.
+
+\subsection{Servizi implementati}
+\begin{description}
+  \item[\texttt{UserService}] Autenticazione, registrazione, gestione profilo.
+  \item[\texttt{RestaurantService}] Ricerca avanzata, preferiti, gestione ristoranti.
+  \item[\texttt{ReviewService}] Creazione/modifica/cancellazione recensioni e risposte.
+\end{description}
+
+\subsection{Data Transfer Objects - DTO}
+Tutti i DTO implementano \texttt{Serializable} per permettere il trasferimento attraverso RMI. Gli oggetti vengono serializzati automaticamente dal meccanismo RMI durante il trasporto tra client e server.
+\paragraph{UserDTO}
+Incapsula i dati dell'utente con campi pubblici per accesso diretto:
+\begin{itemize}
+    \item Informazioni di base: \texttt{username}, \texttt{name}, \texttt{surname}
+    \item Credenziali: \texttt{password} (solo per operazioni di autenticazione)
+    \item Localizzazione: \texttt{address}, \texttt{latitude}, \texttt{longitude}
+    \item Metadati: \texttt{birth\_date}, \texttt{role} (cliente/ristoratore)
+\end{itemize}
+
+\paragraph{RestaurantDTO}
+Contiene tutte le informazioni del ristorante secondo le specifiche:
+\begin{itemize}
+    \item Identificazione: \texttt{restaurant\_id}, \texttt{r\_name}
+    \item Localizzazione: \texttt{address}, \texttt{latitude}, \texttt{longitude}
+    \item Caratteristiche: \texttt{avg\_price}, \texttt{avg\_rating}, \texttt{r\_type} (tipologia cucina)
+    \item Servizi: \texttt{delivery}, \texttt{booking}
+    \item Recensioni: \texttt{ArrayList<ReviewDTO> reviews}
+\end{itemize}
+
+\paragraph{SearchCriteriaDTO}
+Implementa il pattern Builder per costruire criteri di ricerca flessibili:
+\begin{verbatim}
+SearchCriteriaDTO criteria = SearchCriteriaDTO.builder()
+    .coordinates(45.8983, 8.8289)
+    .cuisineType(CuisineType.ITALIAN)
+    .priceRange(215.0, 40.0)
+    .deliveryAvailable(true)
+    .minRating(3.0)
+    .build();
+\end{verbatim}
+
+\subsection{Architettura del Client}
+\label{sec:client}
+Il modulo client di TheKnife implementa un'architettura basata 
+sul pattern Model-View-Controller (MVC) utilizzando JavaFX come 
+framework per l'interfaccia grafica. Questa scelta architetturale 
+garantisce una separazione netta tra la logica di presentazione, 
+la gestione degli eventi e la comunicazione con i servizi remoti.
+
+\subsection{Tecnologie e Framework Utilizzati}
+
+\paragraph{JavaFX e FXML}
+L'interfaccia utente è sviluppata utilizzando JavaFX con file FXML per la definizione dichiarativa delle viste. Questa approccio offre diversi vantaggi:
+
+\begin{itemize}
+    \item \textbf{Separazione design-logica}: I file FXML permettono di definire la struttura e l'aspetto dell'interfaccia separatamente dalla logica applicativa
+    \item \textbf{Manutenibilità}: Le modifiche all'interfaccia possono essere effettuate nei file FXML senza toccare il codice Java
+    \item \textbf{Designer-friendly}: I file FXML possono essere creati e modificati con tool grafici come Scene Builder
+    \item \textbf{Riusabilità}: Componenti UI possono essere facilmente riutilizzati tra diverse viste
+\end{itemize}
+
+Ogni vista dell'applicazione è definita in un file FXML separato (es. \texttt{login-view.fxml}, \texttt{search-view.fxml}) che specifica la struttura dei componenti, il layout e le proprietà di styling.
+
+\paragraph{Pattern MVC nel Client}
+L'architettura client implementa il pattern MVC dove:
+\begin{itemize}
+    \item \textbf{Model}: Rappresentato dai DTO ricevuti dai servizi RMI
+    \item \textbf{View}: Definita nei file FXML con componenti JavaFX
+    \item \textbf{Controller}: Classi Java che gestiscono la logica di presentazione e l'interazione utente
+\end{itemize}
+
+\subsection{Gestione sessione utente}
+Implementata con un Singleton (\texttt{UserSession}) che mantiene stato di login, dati utente e controlli di autorizzazione.

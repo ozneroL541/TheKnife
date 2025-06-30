@@ -1,0 +1,47 @@
+\section{Installazione e Configurazione}
+\label{cap:installazione}
+\subsection{Requisiti di sistema}
+\begin{itemize}
+    \item Sistema operativo: Windows 10+ / macOS 10.14+ / Linux
+    \item Processore: almeno dual-core 2.0 GHz
+    \item Memoria RAM: minimo 2 GB (8 GB raccomandati)
+    \item Spazio su disco: minimo 200 MB per l'installazione
+    \item Java Runtime Environment 11+ installato e configurato nel \texttt{PATH}
+    \item PostgreSQL 13+ con istanza attiva sulla porta \texttt{5432} (per il server)
+    \item Libreria \href{https://gluonhq.com/products/javafx/}{JavaFX 17.0.15} installate (per il client)
+\end{itemize}
+
+\subsection{Installazione e avvio del server}
+\begin{enumerate}
+    \item Ottenere il pacchetto \texttt{Server.jar} più recente 
+    dalla sezione \emph{Release} della repository ufficiale: \href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}.
+    \item Creare un database PostgreSQL:
+    \begin{minted}{SQL}
+    CREATE DATABASE theknife;
+    CREATE USER theknife WITH ENCRYPTED PASSWORD 'password';
+    GRANT ALL PRIVILEGES ON DATABASE theknife TO theknife;
+    \end{minted}
+    \item Avviare il server:
+    \begin{minted}{bash}
+    java -jar Server.jar
+    \end{minted}
+    \item Una volta avviato, il server richiederà le credenziali di accesso al database.
+    Le credenziali sono:
+    \begin{itemize}
+        \item \textbf{Username:} \texttt{theknife}
+        \item \textbf{Password:} \texttt{password}
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Installazione e avvio del client}
+\begin{enumerate}
+    \item Ottenere il pacchetto \texttt{ClientTK.jar} più recente 
+    dalla sezione \emph{Release} della repository ufficiale: \href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}.
+    \item Avviare il client:
+    \begin{minted}{bash}
+    java --module-path ~/path/to/javafx-sdk-17.0.15/lib \
+    --add-modules javafx.controls,javafx.fxml -jar ClientTK.jar
+    \end{minted}
+    Sostituire \texttt{~/path/to/javafx-sdk-17.0.15/lib} con il percorso corretto della libreria JavaFX.
+    \item Comparirà la finestra di login, pronta per l'autenticazione.
+\end{enumerate}
