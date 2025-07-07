@@ -6,6 +6,8 @@ import it.uninsubria.dto.RestaurantDTO;
 import it.uninsubria.dto.SearchCriteriaDTO;
 import it.uninsubria.services.RestaurantService;
 import it.uninsubria.session.UserSession;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,9 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -69,6 +72,11 @@ public class SearchController {
     private ToggleButton[] starButtons;
     private int currentRatingSelection = 1; // Default is 1 star
     private final DecimalFormat priceFormat = new DecimalFormat("#.##");
+
+    private ObservableList<CuisineType> cuisineTypes;
+    private String searchBuffer = "";
+    private Timeline searchTimeout;
+    private int lastSelectedIndex = -1;
 
     /**
      * Initializes the controller.
@@ -194,9 +202,9 @@ public class SearchController {
         double latitude = 0.0;
         double longitude = 0.0;
         if (userSession != null) {
-            double[] coord = userSession.getUserCoordinates();
-            latitude = coord != null ? coord[0] : 0.0;
-            longitude = coord != null ? coord[1] : 0.0;
+            double[] coordinates = userSession.getUserCoordinates();
+            latitude = coordinates != null ? coordinates[0] : 0.0;
+            longitude = coordinates != null ? coordinates[1] : 0.0;
 
         }
 
@@ -265,11 +273,11 @@ public class SearchController {
     @FXML
     private void handleUserArea() {
         try {
-            // Load the my area view
+            // Load my area view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("my-area-view.fxml"));
             Parent root = loader.load();
 
-            // Get the my area controller (it will initialize itself with the current session)
+            // Get my area controller (it will initialize itself with the current session)
             MyAreaController myAreaController = loader.getController();
 
             // Get the current stage and replace the scene
@@ -337,8 +345,8 @@ public class SearchController {
      */
     private void initializeCuisineTypes() {
         // Create an ObservableList with all CuisineType enum values
-        ObservableList<CuisineType> cuisineTypes = FXCollections.observableArrayList(CuisineType.values());
-        cuisineTypeComboBox.setItems(cuisineTypes);
+        this.cuisineTypes = FXCollections.observableArrayList(CuisineType.values());
+        cuisineTypeComboBox.setItems(this.cuisineTypes);
         // Set a custom string converter to display the cuisine type names
         cuisineTypeComboBox.setConverter(new StringConverter<CuisineType>() {
             @Override
@@ -357,6 +365,9 @@ public class SearchController {
         // Add an "Any" option at the beginning
         cuisineTypeComboBox.getItems().addFirst(null);
         cuisineTypeComboBox.getSelectionModel().selectFirst();
+        // Add event handler for key presses to allow searching through cuisine types
+        cuisineTypeComboBox.setOnKeyPressed(this::handleKeyPressed);
+        searchTimeout = new Timeline(new KeyFrame(Duration.millis(1000), e -> searchBuffer = ""));
     }
 
     /**
@@ -451,5 +462,103 @@ public class SearchController {
 
         // Update rating label
         ratingLabel.setText((rating) + "+ stars");
+    }
+
+    /**
+     * Handles key presses for searching through cuisine types.
+     * Allows cycling through cuisine types using letter keys.
+     *
+     * @param event The key event
+     */
+    private void handleKeyPressed(KeyEvent event) {
+        String keyText = event.getText().toLowerCase();
+
+        // Check if it's a letter key
+        if (keyText.length() == 1 && Character.isLetter(keyText.charAt(0))) {
+            // Reset timeout
+            searchTimeout.stop();
+
+            // Add to search buffer
+            searchBuffer += keyText;
+
+            // Find and select match
+            findAndSelectMatch(searchBuffer);
+
+            // Start timeout to clear buffer
+            searchTimeout.play();
+
+            event.consume(); // Prevent default behavior
+        }
+    }
+    /**
+     * Finds and selects a cuisine type that matches the search text.
+     * Searches from the current selection forward, then wraps around.
+     *
+     * @param searchText The text to search for
+     */
+    private void findAndSelectMatch(String searchText) {
+        // First, try to find exact match starting from current position
+        int startIndex = (lastSelectedIndex >= 0) ? lastSelectedIndex + 1 : 0;
+        searchText = searchText.toUpperCase();
+        // Search from current position forward
+        for (int i = startIndex; i < this.cuisineTypes.size(); i++) {
+            if (null != this.cuisineTypes.get(i) && cuisineTypes.get(i).toString().toUpperCase().startsWith(searchText)) {
+                selectItem(i);
+                return;
+            }
+        }
+
+        // If not found, search from beginning
+        for (int i = 0; i < startIndex; i++) {
+            if (null != this.cuisineTypes.get(i) && cuisineTypes.get(i).toString().toUpperCase().startsWith(searchText)) {
+                selectItem(i);
+                return;
+            }
+        }
+
+        // If still not found and searchText is single letter, cycle through matches
+        if (searchText.length() == 1) {
+            cycleThroughMatches(searchText);
+        }
+    }
+    /**
+     * Cycles through cuisine types that start with the given letter.
+     * Starts from the current selection and wraps around if necessary.
+     *
+     * @param letter The letter to match
+     */
+    private void cycleThroughMatches(String letter) {
+        int currentIndex = cuisineTypeComboBox.getSelectionModel().getSelectedIndex();
+
+        // Find next match after current selection
+        for (int i = currentIndex + 1; i < cuisineTypes.size(); i++) {
+            if (null != this.cuisineTypes.get(i) && cuisineTypes.get(i).toString().toUpperCase().startsWith(letter)) {
+                selectItem(i);
+                return;
+            }
+        }
+
+        // If no match found after current, start from beginning
+        for (int i = 0; i <= currentIndex; i++) {
+            if (null != this.cuisineTypes.get(i) && cuisineTypes.get(i).toString().toUpperCase().startsWith(letter)) {
+                selectItem(i);
+                return;
+            }
+        }
+    }
+    /**
+     * Selects the cuisine type at the specified index in the combo box.
+     * Updates the last selected index and ensures the item is visible.
+     *
+     * @param index The index of the cuisine type to select
+     */
+    private void selectItem(int index) {
+        lastSelectedIndex = index;
+        cuisineTypeComboBox.getSelectionModel().select(index);
+
+        // If dropdown is showing, make sure the item is visible
+        if (cuisineTypeComboBox.isShowing()) {
+            cuisineTypeComboBox.show(); // Refresh to ensure visibility
+        }
     }
 }

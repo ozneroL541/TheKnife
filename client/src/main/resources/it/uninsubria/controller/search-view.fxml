@@ -71,7 +71,9 @@
                                                                 <Font name="System Bold" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <ComboBox fx:id="cuisineTypeComboBox" maxWidth="1.7976931348623157E308" promptText="Select cuisine type" />
+                                                        <ComboBox fx:id="cuisineTypeComboBox"
+                                                                  maxWidth="1.7976931348623157E308"
+                                                                  promptText="Select cuisine type"  />
                                                     </children>
                                                 </VBox>
 
