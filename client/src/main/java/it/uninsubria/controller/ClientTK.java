@@ -11,6 +11,7 @@ import javafx.stage.Stage;
  * Main application class for TheKnife client.
  * Launches the JavaFX application and initializes the UI.
  *
+ * @version 1.1.0
  * @author Lorenzo Radice
  */
 public class ClientTK extends Application {

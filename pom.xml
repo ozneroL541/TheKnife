@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.uninsubria</groupId>
   <artifactId>TheKnife</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>TheKnife</name>
   <url>http://maven.apache.org</url>
@@ -53,7 +53,7 @@
                       failonerror="false"/>
 
                 <!-- Copy client shaded JAR (the executable one) -->
-                <copy file="${project.basedir}/bin/ClientTK.jar"
+                <copy file="${project.basedir}/client/target/ClientTK.jar"
                       tofile="${project.basedir}/bin/ClientTK.jar"
                       failonerror="false"/>
               </target>

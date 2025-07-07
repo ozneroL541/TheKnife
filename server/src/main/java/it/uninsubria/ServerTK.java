@@ -15,11 +15,11 @@ import java.rmi.registry.Registry;
 /**
  * Server class for TheKnife application
  * @author Lorenzo Radice
- * @version 1.0.0
+ * @version 1.1.0
  */
 public class ServerTK {
     /** Version of the application */
-    private static final String version = "1.0.0";
+    private static final String version = "1.1.0";
     /** Application title */
     private static final String title = "TheKnife Server";
     /**

@@ -4,7 +4,7 @@
     <parent>
         <groupId>it.uninsubria</groupId>
         <artifactId>TheKnife</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>server</artifactId>
@@ -71,7 +71,7 @@
                     <autocommit>true</autocommit>
                 </configuration>
                 <executions>
-                    <!-- Create user and databse -->
+                    <!-- Create user and database -->
                     <execution>
                         <id>create-db-and-user</id>
                         <phase>process-resources</phase>
