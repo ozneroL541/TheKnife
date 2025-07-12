@@ -1,4 +1,4 @@
-\section{Installazione e Configurazione}
+\section{Installazione e Avvio}
 \label{cap:installazione}
 \subsection{Requisiti di sistema}
 \begin{itemize}
@@ -6,42 +6,110 @@
     \item Processore: almeno dual-core 2.0 GHz
     \item Memoria RAM: minimo 2 GB (8 GB raccomandati)
     \item Spazio su disco: minimo 200 MB per l'installazione
-    \item Java Runtime Environment 11+ installato e configurato nel \texttt{PATH}
-    \item PostgreSQL 13+ con istanza attiva sulla porta \texttt{5432} (per il server)
-    \item Libreria \href{https://gluonhq.com/products/javafx/}{JavaFX 17.0.15} installate (per il client)
+    \item \href{www.java.com}{Java 22+}
+    \item \href{www.postgresql.org}{PostgreSQL} 13+ con istanza attiva sulla porta \texttt{5432} (per il server)
+    \item Libreria \href{https://gluonhq.com/products/javafx/}{JavaFX 17.0.15} installata (per il client)
 \end{itemize}
 
-\subsection{Installazione e avvio del server}
+\subsection{Ottenimento dei sorgenti}
+Scaricare la versione più aggiornata di \textit{TheKnife} da Github:\\
+\href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}.
+
+\subsection{Creazione del database e compilaione del progetto}
+Per la compilazione è richiesto \href{maven.apache.org}{Maven} 3.6+ installato e configurato correttamente.\\
+\`E richiesto che esista un utente di PostgreSQL con permessi 
+di creazione di database e ruoli nominato come \textit{postgre} e con 
+password \textit{postgre} per compilare il progetto e popolare correttamente 
+il database.\\
+In caso il nome o la password di tale utente differiscano da quelli 
+indicati
+è necessario modificare opportunamente le righe \textbf{69} e \textbf{70} 
+del file \textit{TheKnife/server/pom.xml}.
+\begin{minted}{xml}
+<configuration>
+    <!-- Default connection configuration (for admin operations) -->
+    <driver>org.postgresql.Driver</driver>
+    <url>jdbc:postgresql://localhost:5432/postgres</url>
+    <username>postgres</username>
+    <password>postgres</password> <!-- Change with your postgre admin password -->
+    <autocommit>true</autocommit>
+</configuration>
+\end{minted}
+
+La creazione del database e la sua popolazione avvengono in fase di 
+compilazione del progetto tramite Maven.
+Per compilare il progetto, aprire un terminale nella cartella 
+\textit{The TheKnife} e lanciare il comando:
+\begin{minted}{bash}
+mvn clean install && mvn install && mvn clean
+\end{minted}
+Se la compilazione è avvenuta con successo si avrà:
+\begin{itemize}
+    \item Un database PostgreSQL chiamato \texttt{theknife\_db} 
+    con un utente \texttt{theknife}, password \texttt{password} 
+    e tabelle popolate.
+    \item Gli eseguibili \texttt{Server.jar} e \texttt{ClientTK.jar} 
+    nella cartella \textit{TheKnife/bin} creata durante la compilazione.
+\end{itemize}
+
+\subsubsection{Troubleshooting}
+\paragraph{Errore generico}
+In caso di problemi durante la compilazione, verificare:
+\begin{itemize}
+    \item Che il database PostgreSQL sia in esecuzione e accessibile.
+    \item Che le credenziali dell'utente PostgreSQL siano corrette.
+    \item Che Maven sia installato e configurato correttamente.
+\end{itemize}
+\paragraph{Errore nella creazione del database}
+In caso di errore nella creazione automatizzata del database è 
+possibile crearlo manualmente.
 \begin{enumerate}
-    \item Ottenere il pacchetto \texttt{Server.jar} più recente 
-    dalla sezione \emph{Release} della repository ufficiale: \href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}.
-    \item Creare un database PostgreSQL:
-    \begin{minted}{SQL}
-    CREATE DATABASE theknife;
-    CREATE USER theknife WITH ENCRYPTED PASSWORD 'password';
-    GRANT ALL PRIVILEGES ON DATABASE theknife TO theknife;
-    \end{minted}
-    \item Avviare il server:
-    \begin{minted}{bash}
-    java -jar Server.jar
-    \end{minted}
-    \item Una volta avviato, il server richiederà le credenziali di accesso al database.
-    Le credenziali sono:
-    \begin{itemize}
-        \item \textbf{Username:} \texttt{theknife}
-        \item \textbf{Password:} \texttt{password}
-    \end{itemize}
+    \item Creare il database tramite il comando presente 
+    in \textit{TheKnife/server/src/main/resources/db/create\_database.sql}:
+    \item Creare le tabelle con gli script presenti in 
+    \textit{TheKnife/server/src/main/resources/db/tables/}
+    eseguiendoli nel seguente ordine:
+    \begin{enumerate}
+        \item \texttt{addresses.sql}
+        \item \texttt{users.sql}
+        \item \texttt{restaurants.sql}
+        \item \texttt{favorites.sql}
+        \item \texttt{reviews.sql}
+    \end{enumerate}
+    \item Se lo si desidera, popolare le tabelle utilizzando gli script
+    presenti in \textit{TheKnife/src/main/resources/db/samples/} 
+    eseguibili nel seguente ordine:
+    \begin{enumerate}
+        \item \texttt{ex\_addresses.sql}
+        \item \texttt{ex\_users.sql}
+        \item \texttt{ex\_restaurants.sql}
+        \item \texttt{ex\_favorites.sql}
+        \item \texttt{ex\_reviews.sql}
+    \end{enumerate}
 \end{enumerate}
 
-\subsection{Installazione e avvio del client}
-\begin{enumerate}
-    \item Ottenere il pacchetto \texttt{ClientTK.jar} più recente 
-    dalla sezione \emph{Release} della repository ufficiale: \href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}.
-    \item Avviare il client:
-    \begin{minted}{bash}
-    java --module-path ~/path/to/javafx-sdk-17.0.15/lib \
-    --add-modules javafx.controls,javafx.fxml -jar ClientTK.jar
-    \end{minted}
-    Sostituire \texttt{~/path/to/javafx-sdk-17.0.15/lib} con il percorso corretto della libreria JavaFX.
-    \item Comparirà la finestra di login, pronta per l'autenticazione.
-\end{enumerate}
+\subsection{Avvio del server}
+Per eseguire il server recarsi nella cartella \textit{TheKnife/bin} 
+e lanciare il comando:
+\begin{minted}{bash}
+java -jar Server.jar
+\end{minted}
+Una volta avviato, il server richiederà le credenziali di accesso al database.
+Le credenziali sono:
+\begin{itemize}
+    \item \textbf{Username:} \texttt{theknife}
+    \item \textbf{Password:} \texttt{password}
+\end{itemize}
+
+\subsection{Avvio del client}
+Per eseguire il client recarsi nella cartella \textit{TheKnife/bin} 
+e lanciare il comando:
+\begin{minted}{bash}
+java --module-path ~/path/to/javafx-sdk-17.0.15/lib \
+--add-modules javafx.controls,javafx.fxml -jar ClientTK.jar
+\end{minted}
+Sostituire \texttt{~/path/to/javafx-sdk-17.0.15/lib} con 
+il percorso dove è scaricata la propria libreria JavaFX.
+Una volta avviato apparirà la finestra principale con interfaccia grafica
+e sarà possibile effettuare il login con le credenziali di un utente, 
+registrarsi o accedere come utente ospite.

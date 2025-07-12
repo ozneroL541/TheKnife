@@ -67,7 +67,7 @@
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/postgres</url>
                     <username>postgres</username>
-                    <password>postgres</password> <!-- Change to your postgres admin password -->
+                    <password>postgres</password> <!-- Change with your postgre admin password -->
                     <autocommit>true</autocommit>
                 </configuration>
                 <executions>
