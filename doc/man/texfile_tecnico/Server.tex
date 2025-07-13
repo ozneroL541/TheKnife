@@ -2,3 +2,47 @@
 Il package \texttt{Server} contiene le classi necessarie per 
 la gestione del server, che si occupa di gestire le richieste 
 dai client interfacciandosi con il database.
+
+\subsection{Main}
+La classe \texttt{ServerTK} contiene il metodo \texttt{main} 
+che avvia il server e gestisce le connessioni dei client.
+Essa delega la richiesta di credenziali e la connessione al 
+database alla classe \texttt{DBConnector}.
+La classe \texttt{DBConnection} invece è la vera e propria 
+istanza di connessione al database implementata con il design
+pattern \textit{Singleton}, garantendo che ci sia una sola connessione
+attiva alla volta.
+
+\subsection{Data Access Object}
+Il package \texttt{dao} contiene le classi che implementano 
+il pattern Data Access Object (DAO) per l'interazione
+con il database. Queste classi sono responsabili dell'interazione 
+del database con l'applicazione.
+Le classi implementate sono le seguenti:
+\begin{itemize}
+    \item \texttt{UserDAO}: gestisce le operazioni relative agli utenti
+    \item \texttt{RestaurantDAO}: gestisce le operazioni relative ai ristoranti
+    \item \texttt{AddressDAO}: gestisce le operazioni relative agli indirizzi
+    \item \texttt{ReviewDAO}: gestisce le operazioni relative alle recensioni
+\end{itemize}
+Queste classi semplificano la gestione dei dati permettendo 
+di interfacciarsi al database senza preoccuparsi delle specifiche
+implementative dello stesso. 
+In queste classi sono implementate le query per l'inserimento, 
+la modifica e l'eliminazione dei dati e gestiscono in autonomia 
+le eccezioni che possono verificarsi durante l'interazione
+con il database.
+
+\subsection{Server Services}
+Il package \texttt{server\_services} contiene le classi che implementano
+le interfacce definite nel package \texttt{common}.
+Queste classi vengono esposte dal database in un \texttt{Registry}
+e rese accessibili ai client tramite JavaRMI.
+I metodi delle classi garantiscono una corretta gestione della 
+concorrenza e utilizzano le classi DAO per interagire con il database.
+Le classi implementate sono le seguenti:
+\begin{itemize}
+    \item \texttt{RestaurantServiceImpl.java} implementa \texttt{RestaurantService}
+    \item \texttt{ReviewServiceImpl.java} implementa \texttt{ReviewService}
+    \item \texttt{UserServiceImpl.java} implementa \texttt{UserService}
+\end{itemize}
