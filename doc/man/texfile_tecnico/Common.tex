@@ -1,0 +1,136 @@
+\section{Common}
+Il package \texttt{Common} contiene i files comuni al 
+client e al server per permetterne l'interazione.
+\`E il package principale del progetto su cui si basa 
+l'intera architettura del sistema applicativo.
+
+\subsection{Data Transfer Objects}
+Il design pattern \textit{Data Transfer Object} (DTO) è 
+utilizzato per trasferire dati tra il client e il server. 
+I DTO sono classi che contengono solo i dati necessari per la 
+comunicazione, senza logica di business. 
+Questo approccio semplifica la serializzazione e deserializzazione 
+dei dati durante le richieste poiché tutte le classi DTO 
+implementano \texttt{Serializable}.\\
+Le classi principali che utilizzano il design pattern corrispondono 
+alle entità principali del database e sono le seguenti:
+\begin{itemize}
+    \item \texttt{\hyperref[sec:addressdto]{AddressDTO}}
+    \item \texttt{\hyperref[sec:userdto]{UserDTO}}
+    \item \texttt{\hyperref[sec:restaurantdto]{RestaurantDTO}}
+    \item \texttt{\hyperref[sec:reviewdto]{ReviewDTO}}
+\end{itemize}
+Come si può notare dalla lista, non è stato creato un DTO per
+l'entità \textit{Favorite} poiché non si è ritenuto necessario 
+creare una classe apposita per la sua gestione. 
+\`E stata invece utilizzata nei metodi interni al server per le 
+elaborazioni, ma non come oggetto trasferibile.\\
+Si è ritenuto opportuno creare due tipi enumerabili
+per rappresentare i tipi di cucina e di utenti:
+\begin{itemize}
+    \item \texttt{\hyperref[sec:cuisinetype]{CuisineType}}
+    \item \texttt{\hyperref[sec:userroledto]{UserRoleDTO}}
+\end{itemize}
+Per facilitare la gestione della ricerca e i relativi filtri è 
+stata creata una classe apposita chiamata 
+\texttt{\hyperref[sec:searchcriteriadto]{SearchCriteriaDTO}}.
+
+\subsubsection{AddressDTO}
+\label{sec:addressdto}
+La classe \texttt{AddressDTO} rappresenta un indirizzo
+e contiene campi analoghi a quelli della tabella
+\textit{addresses} del database ad eccezione del campo
+\textit{address\_id}.
+
+\subsubsection{UserDTO}
+\label{sec:userdto}
+La classe \texttt{UserDTO} rappresenta un utente
+e contiene campi analoghi a quelli della tabella
+\textit{users}.\\
+L'indirizzo dell'utente è rappresentato da un campo
+\textit{address} di tipo \texttt{AddressDTO} che durante 
+l'inserimento nel database viene convertito nell'ID corrispondente 
+e in fase di lettura nel corrispettivo oggetto.\\
+L'attributo \textit{role} è di tipo \texttt{UserRoleDTO} ed è 
+gestito dalla classe enumerabile \texttt{UserRoleDTO}.
+
+\subsubsection{RestaurantDTO}
+\label{sec:restaurantdto}
+La classe \texttt{RestaurantDTO} rappresenta un ristorante
+e contiene campi analoghi a quelli della tabella
+\textit{restaurants}.\\
+L'indirizzo dell'utente è rappresentato da un campo
+\texttt{address} di tipo \texttt{AddressDTO} che durante 
+l'inserimento nel database viene convertito nell'ID corrispondente 
+e in fase di lettura nel corrispettivo oggetto.\\
+Sono presenti due campi aggiuntivi per fornire maggiori 
+informazioni. I campi sono: \texttt{rating} e 
+\texttt{reviewsNumber}. Essendo essi deducibili dal Database è 
+necessario poterli trasferire al client e si è ritenuto opportuno 
+farlo inserendoli nell'oggetto dalla cui entita corrispettiva si 
+derivano.\\
+
+\subsubsection{ReviewDTO}
+\label{sec:reviewdto}
+La classe \texttt{ReviewDTO} rappresenta una recensione ad un 
+ristorante e contiene campi analoghi a quelli della tabella
+\textit{reviews}.\\
+L'utente che ha scritto la recensione è rappresentato dal campo 
+\texttt{username} di tipo \texttt{String} e il ristorante dal campo 
+\texttt{restaurant\_id} di tipo \texttt{String}.
+Non è stato ritenuto opportuno utilizzare dei tipo semplici piuttosto
+che i rispettivi DTO poiché si ritiene che essi siano sufficienti e 
+che invece inserire ulteriori oggetti possa causare inutile overhead.\\
+
+\subsubsection{CuisineType}
+\label{sec:cuisinetype}
+La classe \texttt{CuisineType} è un tipo enumerabile che
+rappresenta i 276 tipi di cucina disponibili nel sistema.
+I tipi di cucina sono predefiniti e sono gli medesimi sia per 
+la classe \texttt{CuisineType} che per il database.
+Questo approccio consente di evitare errori di battitura e
+di garantire la coerenza tra applicazione e database.\\
+I tipi di cucina sono rappresentati come stringhe e sono
+utilizzati per filtrare i ristoranti durante le ricerche.
+
+\subsubsection{UserRoleDTO}
+\label{sec:userroledto}
+La classe \texttt{UserRoleDTO} è un tipo enumerabile che
+rappresenta i ruoli degli utenti nel sistema.
+I ruoli sono:
+\begin{itemize}
+    \item \texttt{CLIENT}: cliente registrato
+    \item \texttt{OWNER}: proprietario di un ristorante
+\end{itemize}
+I ruoli sono predefiniti e identici sia per l'applicazione 
+Java che per il database.
+
+\subsubsection{SearchCriteriaDTO}
+\label{sec:searchcriteriadto}
+La classe \texttt{SearchCriteriaDTO} rappresenta i criteri di 
+ricerca per i ristoranti.
+I suoi campi rappresentano i filtri applicabili alla ricerca.
+\begin{itemize}
+    \item \texttt{cuisineType}: tipologia di cucina
+    \item \texttt{minPrice}: prezzo minimo in euro
+    \item \texttt{maxPrice}: prezzo massimo in euro
+    \item \texttt{deliveryAvailable}: disponibilità del servizio di consegna
+    \item \texttt{onlineBookingAvailable}: disponibilità della prenotazione
+    \item \texttt{minRating}: valutazione minima (scala 1-5)
+    \item \texttt{latitude}: latitudine dell'utente
+    \item \texttt{longitude}: longitudine dell'utente
+\end{itemize}
+Tutti i campi sono opzionali ad eccezione delle coordinate, 
+necessarie a ordinare i ristoranti in base alla distanza
+dall'utente tramite la 
+\textit{\href{https://rosettacode.org/wiki/Haversine_formula}{Formula di Haversine}}.
+Per la creazione dell'oggetto \texttt{SearchCriteriaDTO} è stato
+utilizzato il design pattern \textit{Builder} per facilitarne la
+creazione e la gestione dei criteri.
+Il pattern \textit{Builder} consente di creare oggetti complessi
+in modo flessibile e leggibile, permettendo di impostare solo i
+campi desiderati senza dover gestire costruttori con molti 
+parametri.
+Questo approccio permette flessibilità senza compromettere la
+leggibilità del codice, facilitando la creazione dell'oggetto
+\texttt{SearchCriteriaDTO}.

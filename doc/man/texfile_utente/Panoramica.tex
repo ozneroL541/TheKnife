@@ -3,18 +3,21 @@
 \subsection{Architettura generale}
 \emph{TheKnife} adotta un'architettura client-server modulare:
 \begin{itemize}
-    \item \textbf{Server:} implementato in Java 24, 
+    \item \textbf{Server - \texttt{Server.jar}} implementato in Java 24, 
     espone servizi Registry RMI sulla porta 1099 e 
     gestisce i dati interfacciandosi con un database relazionale.
-    \item \textbf{Client desktop:} applicazione JavaFX 
+    \item \textbf{Client desktop - \texttt{ClientTK.jar}} applicazione con 
+    Graphical User Interface implementata in JavaFX 
     che interagisce con il server tramite JavaRMI.
-    \item \textbf{Database:} database creato su PostgreSQL 13+
+    \item \textbf{Database} database creato su PostgreSQL 13+
 \end{itemize}
 
 \subsection{Tecnologie e librerie}
+Nel seguente elenco sono riportate le principali teconologie del 
+progetto, necessarie per la sua compilazione ed esecuzione.
 \begin{description}
-    \item[Java Virtual Machine (JVM) 24] Sistema di esecuzione per applicazioni Java.
-    \item[Maven 3.9.9]
+    \item[Java Virtual Machine (JVM) 22+] Sistema di esecuzione per applicazioni Java.
+    \item[Maven 3.9.9] Strumento per la compilazione e gestione delle dipendenze.
     \item[PostgreSQL 13+] Sistema di gestione del database open source.
     \item[JavaFX] Libreria per l'interfaccia grafica (client).
 \end{description}

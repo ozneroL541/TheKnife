@@ -6,7 +6,7 @@ Come database è stato scelto PostgreSQL.
 \subsection{Schema del Database}
 \subsubsection{Diagramma Entità-Relazione}
 Il database è stato progettato realizzando un 
-diagramma Entità-Relazione che racchiude i dati che si ritiene 
+diagramma Entità-Relazione (Figura~\ref{fig:er-diagram}) che racchiude i dati che si ritiene 
 necessario gestire.
 \begin{figure}[H]
   \centering
@@ -18,11 +18,13 @@ Come si evince dal diagramma l'entità principale
 è \textit{Address} che contiene i dati relativi agli indirizzi. 
 \textit{User} e \textit{Restaurant} sono in relazione con \textit{Address} 
 e a loro volta sono in relazione tra loro.
-\textit{Review} e \textit{Favorite} sono entità che collegano 
+\textit{Review} e \textit{Favorite} sono entità che mettono in 
+relazione  
 \textit{User} e \textit{Restaurant} per gestire le recensioni
 e i ristoranti preferiti dagli utenti.
 \subsubsection{Rielaborazione del Diagramma}
-Successivamente è stata eseguita una rielaborazione del diagramma
+Successivamente è stata eseguita una rielaborazione del diagramma 
+(Figura~\ref{fig:er-diagram2})
 per normalizzare le tabelle.
 \begin{figure}[H]
   \centering
@@ -34,19 +36,29 @@ Dopo questa rielaborazione le coordinate da attributo derivato
 sono diventati attributi semplici.
 Tuttavia, nell'implementazione finale, si è deciso di spostare le 
 coordinate nell'entità \textit{Address} per una migliore gestione.
+\'E infatti utile poter calcolare la distanza tra un \textit{Restaurant} 
+e un \textit{User} per mostrare i ristoranti più vicini all'utente.
+Attribuendo questo campo ad entrambe le entità si è potuto gestire 
+in modo efficace questo calcolo evitando ridondanze e ulteriori 
+query al database.
 \subsubsection{Schema}
-Infine si sono elencate le tabelle e i relativi attributi:
+Infine si sono elencate le tabelle e i relativi attributi 
+per avere un visione immediata delle tabelle che compongono il database.
 \begin{itemize}
-    \item \textbf{addresses} (\underline{address\_id}, country, city, street, house\_number, latitude, longitude)
-    \item \textbf{users} (\underline{username}, h\_password, name, surname, birth\_date, role, address\_id\textsuperscript{addresses})
-    \item \textbf{restaurants} (\underline{restaurant\_id}, r\_owner, r\_name, avg\_price, delivery, booking, r\_type, address\_id\textsuperscript{addresses})
-    \item \textbf{favorites} (\underline{username\textsuperscript{users}, restaurant\_id\textsuperscript{restaurants}})
-    \item \textbf{reviews} (\underline{username\textsuperscript{users}, restaurant\_id\textsuperscript{restaurants}}, rating, comment, reply)
+    \item \textbf{\hyperref[sec:addresses]{addresses}} (\underline{address\_id}, country, city, street, house\_number, latitude, longitude)
+    \item \textbf{\hyperref[sec:users]{users}} (\underline{username}, h\_password, name, surname, birth\_date, role, address\_id\textsuperscript{\hyperref[sec:addresses]{addresses}})
+    \item \textbf{\hyperref[sec:restaurants]{restaurants}} (\underline{restaurant\_id}, r\_owner, r\_name, avg\_price, delivery, booking, r\_type, address\_id\textsuperscript{\hyperref[sec:addresses]{addresses}})
+    \item \textbf{\hyperref[sec:favorites]{favorites}} (\underline{username\textsuperscript{\hyperref[sec:users]{users}}, restaurant\_id\textsuperscript{\hyperref[sec:restaurants]{restaurants}}})
+    \item \textbf{\hyperref[sec:reviews]{reviews}} (\underline{username\textsuperscript{\hyperref[sec:users]{users}}, restaurant\_id\textsuperscript{\hyperref[sec:restaurants]{restaurants}}}, rating, comment, reply)
 \end{itemize}
-Questa lista delle tabelle è stata infine implementata nel database.
+Questa lista di tabelle è presente nel progetto nel file 
+\textit{TheKnife/server/src/main/resources/db/Structure.md} 
+con link diretti alle relative tabelle per poter consultare 
+agevolmente le singole tabelle e la loro implementazione.
 
 \subsection{Tabelle}
 \subsubsection{Addresses}
+\label{sec:addresses}
 La tabella \textit{addresses} contiene gli indirizzi degli 
 utenti e dei ristoranti.\\
 Gli attributi sono:
@@ -64,6 +76,7 @@ le coordinate siano valide, nello specifico che la latitudine
 sia compresa tra -90 e 90 e la longitudine tra -180 e 180.
 
 \subsubsection{Users}
+\label{sec:users}
 La tabella \textit{users} contiene gli utenti registrati 
 nell'applicazione.\\
 Gli attributi sono:
@@ -90,6 +103,7 @@ di un utente, si aggiornerà il campo \textit{address\_id}, in caso
 di cancellazione dell'indirizzo non verrà cancellato l'utente.
 
 \subsubsection{Restaurants}
+\label{sec:restaurants}
 La tabella \textit{restaurants} contiene i ristoranti creati 
 dai ristoratori.\\
 Gli attributi sono:
@@ -117,6 +131,7 @@ non verrà cancellato il ristorante.\\
 prezzo medio sia un numero positivo.
 
 \subsubsection{Favorites}
+\label{sec:favorites}
 La tabella \textit{favorites} server a gestire i 
 ristorante preferiti dagli utenti.\\
 Gli attributi sono:
@@ -132,6 +147,7 @@ si aggiorneranno i rispettivi campi, in caso di cancellazione
 di un utente o di un ristorante, verrà cancellata la preferenza.
 
 \subsubsection{Reviews}
+\label{sec:reviews}
 La tabella \textit{reviews} serve a gestire le recensioni
 che gli utenti possono lasciare ai ristoranti.\\
 Gli attributi sono:

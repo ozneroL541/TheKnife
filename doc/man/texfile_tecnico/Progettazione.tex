@@ -50,7 +50,19 @@ Per questa ragione il progetto è suddiviso in tre moduli principali:
   \item \textbf{server}: implementa il server e le funzionalità di gestione dei dati
 \end{itemize}
 
-% TODO
+\subsection{Flusso delle Informazioni}
+Nel modulo \textit{common} sono definite le interfacce tramite il 
+pattern Data Transfer Object (DTO), che permettono di trasferire
+i dati tra client e server in modo strutturato.\\
+Il trasferimento di informazione avviene attraverso le interfacce 
+definite dai DTO dal client al server, l'elaborazione viene poi presa 
+in carico dagli oggetti Data Access Object (DAO) che
+gestiscono l'interazione con il database.\\
+Il server, una volta ricevuti i dati, li elabora e restituisce
+le risposte al client, che le visualizza nell'interfaccia grafica.\\
+Questa architettura consente di mantenere una chiara separazione
+tra le responsabilità del client e del server, facilitando la
+manutenzione e la semplicità del sistema.
 
 \begin{figure}[H]
   \centering

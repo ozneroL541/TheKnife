@@ -16,11 +16,12 @@
 Scaricare la versione più aggiornata di \textit{TheKnife} da Github.\\
 \href{https://github.com/ozneroL541/TheKnife}{https://github.com/ozneroL541/TheKnife}
 
-\subsection{Creazione del database e compilaione del progetto}
+\subsection{Compilaione del progetto}
+\label{sec:compilazione}
 Per la compilazione è richiesto \href{maven.apache.org}{Maven} 3.6+ installato e configurato correttamente.\\
 \`E richiesto che esista un utente di PostgreSQL con permessi 
-di creazione di database e ruoli nominato come \textit{postgre} e con 
-password \textit{postgre} per compilare il progetto e popolare correttamente 
+di creazione di database e ruoli nominato come \textit{postgres} e con 
+password \textit{postgres} per compilare il progetto e popolare correttamente 
 il database.\\
 In caso il nome o la password di tale utente differiscano da quelli 
 indicati
@@ -36,24 +37,30 @@ del file \textit{TheKnife/server/pom.xml}.
     <autocommit>true</autocommit>
 </configuration>
 \end{minted}
-
 La creazione del database e la sua popolazione avvengono in fase di 
 compilazione del progetto tramite Maven.
 Per compilare il progetto, aprire un terminale nella cartella 
-\textit{The TheKnife} e lanciare il comando:
+\textit{TheKnife} e lanciare i comandi:
 \begin{minted}{bash}
-mvn clean install && mvn install && mvn clean
+mvn clean install
+mvn install
+mvn clean
 \end{minted}
 Se la compilazione è avvenuta con successo si avrà:
 \begin{itemize}
     \item Un database PostgreSQL chiamato \texttt{theknife\_db} 
-    con un utente \texttt{theknife}, password \texttt{password} 
+    con proprietario un utente chiamato \texttt{theknife}
     e tabelle popolate.
-    \item Gli eseguibili \texttt{Server.jar} e \texttt{ClientTK.jar} 
-    nella cartella \textit{TheKnife/bin} creata durante la compilazione.
+    \item I due eseguibili \texttt{Server.jar} e \texttt{ClientTK.jar} presenti
+    nella cartella \textit{TheKnife/bin}.
 \end{itemize}
 
 \subsubsection{Troubleshooting}
+\paragraph{Errore nella creazione del database}
+In caso di errore nella creazione automatizzata del database è 
+possibile crearlo manualmente. 
+Leggere la sezione \textbf{\ref{sec:creazione_db} Creazione del database} 
+per le istruzioni dettagliate sulla creazione del database e le sue tabelle.
 \paragraph{Errore generico}
 In caso di problemi durante la compilazione, verificare:
 \begin{itemize}
@@ -61,15 +68,21 @@ In caso di problemi durante la compilazione, verificare:
     \item Che le credenziali dell'utente PostgreSQL siano corrette.
     \item Che Maven sia installato e configurato correttamente.
 \end{itemize}
-\paragraph{Errore nella creazione del database}
-In caso di errore nella creazione automatizzata del database è 
-possibile crearlo manualmente.
+
+\subsection{Creazione del database}
+\label{sec:creazione_db}
+\'E consigliato creare il database in maniera automatizzata
+tramite \textit{Maven} in fase di compilazione seguendo le 
+istruzioni della sezione precedente (\ref{sec:compilazione}).\\
+In caso si desideri creare il database manualmente, seguire i 
+passi indicati di seguito.
 \begin{enumerate}
     \item Creare il database tramite il comando presente 
-    in \textit{TheKnife/server/src/main/resources/db/create\_database.sql}:
-    \item Creare le tabelle con gli script presenti in 
+    nel file 
+    \textit{TheKnife/server/src/main/resources/db/create\_database.sql}
+    \item Creare le tabelle con gli script presenti nella cartella
     \textit{TheKnife/server/src/main/resources/db/tables/}
-    eseguiendoli nel seguente ordine:
+    eseguendoli nel seguente ordine:
     \begin{enumerate}
         \item \texttt{addresses.sql}
         \item \texttt{users.sql}
@@ -78,8 +91,9 @@ possibile crearlo manualmente.
         \item \texttt{reviews.sql}
     \end{enumerate}
     \item Se lo si desidera, popolare le tabelle utilizzando gli script
-    presenti in \textit{TheKnife/src/main/resources/db/samples/} 
-    eseguibili nel seguente ordine:
+    presenti nella cartella\\
+    \textit{TheKnife/src/main/resources/db/samples/} 
+    eseguendoli nel seguente ordine:
     \begin{enumerate}
         \item \texttt{ex\_addresses.sql}
         \item \texttt{ex\_users.sql}
@@ -88,8 +102,15 @@ possibile crearlo manualmente.
         \item \texttt{ex\_reviews.sql}
     \end{enumerate}
 \end{enumerate}
+una volta eseguiti gli script il database sarà correttamente 
+popolato e sarà possibile avviare il server 
+di \textit{TheKnife}.
 
 \subsection{Avvio del server}
+\label{sec:avvio_server}
+Per avviare il server è necessario che la creazione del database 
+e delle relative tabelle sia avvenuta con successo 
+(\ref{sec:creazione_db}).
 Per eseguire il server recarsi nella cartella \textit{TheKnife/bin} 
 e lanciare il comando:
 \begin{minted}{bash}
@@ -103,14 +124,18 @@ Le credenziali sono:
 \end{itemize}
 
 \subsection{Avvio del client}
+\label{sec:avvio_client}
+Per avviare il client è necessario che il server sia in esecuzione
+e raggiungibile sulla porta \texttt{1099}(\ref{sec:avvio_server}) dal dispositivo che 
+eseguie il client.
 Per eseguire il client recarsi nella cartella \textit{TheKnife/bin} 
 e lanciare il comando:
 \begin{minted}{bash}
 java --module-path ~/path/to/javafx-sdk-17.0.15/lib \
 --add-modules javafx.controls,javafx.fxml -jar ClientTK.jar
 \end{minted}
-Sostituire \texttt{~/path/to/javafx-sdk-17.0.15/lib} con 
-il percorso dove è scaricata la propria libreria JavaFX.
+Sostituire \texttt{\~/path/to/javafx-sdk-17.0.15/lib} con 
+il percorso dove è presente la propria libreria JavaFX.
 Una volta avviato apparirà la finestra principale con interfaccia grafica
 e sarà possibile effettuare il login con le credenziali di un utente, 
 registrarsi o accedere come utente ospite.
