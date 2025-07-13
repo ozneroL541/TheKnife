@@ -134,3 +134,47 @@ parametri.
 Questo approccio permette flessibilità senza compromettere la
 leggibilità del codice, facilitando la creazione dell'oggetto
 \texttt{SearchCriteriaDTO}.
+
+\subsection{Services}
+I servici che il server fornisce al client sono definiti nel 
+package \texttt{Services}.
+Questi servizi sono implementati come interfacce che definiscono
+i metodi disponibili per il client implementati dal server.
+
+\subsubsection{UserService}
+Il servizio \texttt{UserService} i principali metodi per la gestione
+degli utenti, ovvero registrazione attraverso il metodo
+\texttt{register} e login attraverso il metodo \texttt{login}.
+
+\subsubsection{RestaurantService}
+Il servizio \texttt{RestaurantService} fornisce metodi per 
+l'interazione coi ristoranti.
+I metodi definiti sono:
+\begin{itemize}
+    \item \texttt{searchRestaurants}: per cercare ristoranti in base ai criteri di ricerca
+    \item \texttt{getFavoriteRestaurants}: per ottenere i ristoranti preferiti di un utente
+    \item \texttt{getOwnedRestaurants}: per ottenere i ristoranti posseduti da un ristoratore
+    \item \texttt{getReviewedRestaurants}: per ottenere i ristoranti recensiti da un utente
+    \item \texttt{addFavoriteRestaurant}: permette ad un utente di aggiungere un ristorante ai preferiti
+    \item \texttt{removeFavoriteRestaurant}: permette ad un utente di rimuvere un ristorante dai preferiti
+    \item \texttt{createRestaurant}: permette ad un ristoratore di creare un nuovo ristorante
+\end{itemize}
+
+\subsubsection{ReviewService}
+Il servizio \texttt{ReviewService} fornisce metodi per 
+l'interazione con le recensioni.
+I metodi definiti sono:
+\begin{itemize}
+    \item \texttt{getReviews}: per ottenere tutte le recensioni di un ristorante
+    \item \texttt{createOrUpdateReview}: per creare o aggiornare la recensione di un cliente
+    \item \texttt{deleteReview}: permette di eliminare la recensione di un cliente
+\end{itemize}
+
+\subsection{Exceptions}
+Il package \texttt{Exceptions} contiene le eccezioni personalizzate 
+che i servizi possono lanciare in caso di errori.
+Le eccezioni gestite sono:
+\begin{itemize}
+    \item \texttt{UserException}: eccezione riguardante errori relativi ai dati degli utenti
+    \item \texttt{AddressException}: eccezione riguardante errori relativi ai dati degli indirizzi
+\end{itemize}
