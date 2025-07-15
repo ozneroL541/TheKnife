@@ -6,12 +6,18 @@ dai client interfacciandosi con il database.
 \subsection{Main}
 La classe \texttt{ServerTK} contiene il metodo \texttt{main} 
 che avvia il server e gestisce le connessioni dei client.
-Essa delega la richiesta di credenziali e la connessione al 
-database alla classe \texttt{DBConnector}.
-La classe \texttt{DBConnection} invece è la vera e propria 
-istanza di connessione al database implementata con il design
-pattern \textit{Singleton}, garantendo che ci sia una sola connessione
-attiva alla volta.
+All'avvio del server vengono richieste le credenziali per stabilire 
+una connessione con il database e, una volta creata, viene creato un 
+registro RMI per poter esporre i servizi offerti dal server.
+
+\subsubsection{DBConnection}
+La classe \texttt{DBConnection} si occupa di stabilire
+la connessione con il database e 
+istanziando una singola connessione col Database e rendendola disponible 
+alle altre classi del server tramite il design pattern \textit{Singleton}.
+Per ottenere la connessione al database, viene utilzzata la classe 
+\textit{DBConnector} che si occupa del suo ottenimento
+chiedendo le credenziali all'utente da riga di comando.
 
 \subsection{Data Access Object}
 Il package \texttt{dao} contiene le classi che implementano 

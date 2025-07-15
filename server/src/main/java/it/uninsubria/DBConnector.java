@@ -9,6 +9,8 @@ import java.io.Console;
 
 /**
  * DBConnector class helps to connect to the database
+ * providing an easy way to get the database connection
+ * given the credentials.
  */
 public class DBConnector {
     /** Database URL */

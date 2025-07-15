@@ -3,6 +3,10 @@ package it.uninsubria;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * DBConnection class provides a singleton connection to the database
+ * and manages the connection attempts.
+ */
 public class DBConnection {
     /** Database connection */
     private static Connection connection = null;
