@@ -1,5 +1,39 @@
 \section{Client}
+Il package \texttt{Client} contiene le classi necessarie per
+la gestione del client, che si occupa di interagire con l'utente 
+attraverso la Graphical User Interface e di utilizzare i 
+servizi offerti dal server tramite JavaRMI.
 
-\subsection{User Session}
+\subsection{ClientTK}
+La classe \texttt{ClientTK} contiene il metodo \texttt{main}
+che all'avvio lancia l'interfaccia grafica dell'applicazione e 
+istaura una connession col server per poter utilizzare i servizi 
+offerti tramite il Registro RMI.\\
+La connessione con il Registro è unica per ogni client e 
+viene effettuata tramite la classe \texttt{ServerAddress} che, 
+oltre a contenere le informazioni riguardanti l'indirizzo IP (o 
+corrispettivo hostname) e la porta del server, contiene anche il metodo
+\texttt{getRegistry()} (unico metodo pubblico fornito dalla classe) 
+che restituisce l'istanza \texttt{Registry} del server.
+La classe \texttt{ServerAddress} è implementata con il design pattern 
+\textit{Singleton} per garantire che ogni client ne utilizzi una sola 
+istanza così da evitare che vi siano più connessioni da uno stesso +
+client e ridurre così il carico sul server.
+
+\subsection{Sessione Utente}
+La classe \texttt{UserSession} contiene le informazioni relative
+allo stato della sessione.
+Essa è implementata con il design pattern \textit{Singleton} 
+per garantirne l'unicità.
+I campi principali sono \texttt{isLoggedIn} e \texttt{currentUser}.
+Il primo è un campo booleano che indica se l'utente è 
+attualmente loggato, il secondo è un oggetto \texttt{UserDTO} che 
+contiene le informazioni dell'utente loggato.
+Oltre a conoscere lo stato di log di un utente è possibile, 
+qualora l'utente sia loggato, saperne la tipologia così da 
+poter differenziare l'esperienza tra cliente e ristoratore.
+Il campo \texttt{currentUser} è determinante anche per la ricerca
+dei ristoranti in quanto, contenendo le coordinate dell'utente, 
+permette di trovare i ristoranti in base alla loro distanza.
 
 \subsection{User Interface}

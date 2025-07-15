@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility class for client-side operations and mock data.
- * This class provides temporary mock data and utility functions for the client application.
+ * Utility class for client-side operations
  *
  * @author Lorenzo Radice
  */

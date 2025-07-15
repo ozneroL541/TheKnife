@@ -11,7 +11,9 @@ import it.uninsubria.dto.UserDTO;
  */
 public class UserSession {
     private static UserSession instance;
+    /** The currently logged-in user */
     private UserDTO currentUser;
+    /** Indicates whether a user is currently logged in */
     private boolean isLoggedIn;
 
     /**
