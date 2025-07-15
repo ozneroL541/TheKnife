@@ -2,7 +2,7 @@
 
 \subsection{Patterns}
 Il progetto è stato sviluppato seguendo alcuni design patterns
-per garantire una struttura chiara e manutenibile.\\
+per garantire una struttura chiara e mantenibile.\\
 I principali
 design patterns utilizzati sono:
 \begin{itemize}
@@ -28,8 +28,8 @@ l'algoritmo di hashing \href{https://github.com/p-h-c/phc-winner-argon2}{\textit
 Questo algoritmo è stato scelto per la sua resistenza agli attacchi 
 di tipo brute-force, anche parallelizzati, e per la sua capacità di essere configurabile
 in termini di memoria e tempo di esecuzione, rendendolo estremamente flessibile.\\
-La sua implementazione prevede che quando un utente si registri, 
-la sua password venga hashata prima di essere iserita nel database;
+La sua implementazione prevede che, quando un utente si registri, 
+la sua password venga hashata prima di essere inserita nel database;
 mentre quando un utente effettua il login, la password inserita
 venga anch'essa hashata e confrontata con quella presente nel database
 corrispondente allo username fornito.

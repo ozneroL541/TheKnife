@@ -13,13 +13,17 @@ registro RMI per poter esporre i servizi offerti dal server.
 \subsubsection{DBConnection}
 La classe \texttt{DBConnection} si occupa di stabilire
 la connessione con il database e 
-istanziando una singola connessione col Database e rendendola disponible 
+istanziando una singola connessione col Database e rendendola disponibile 
 alle altre classi del server tramite il design pattern \textit{Singleton}.
-Per ottenere la connessione al database, viene utilzzata la classe 
+Per ottenere la connessione al database, viene utilizzata la classe 
 \textit{DBConnector} che si occupa del suo ottenimento
 chiedendo le credenziali all'utente da riga di comando.
-
-% TODO: Inserire interaction diagram
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{images/UML-interaction-server.png}
+  \caption{Interaction Diagram - Server Start-Up}
+  \label{fig:interaction-diagram-server}
+\end{figure}
 
 \subsection{Data Access Object}
 Il package \texttt{dao} contiene le classi che implementano 
@@ -37,15 +41,15 @@ Le classi implementate sono le seguenti:
 Queste classi semplificano la gestione dei dati permettendo 
 di interfacciarsi al database senza preoccuparsi delle specifiche
 implementative dello stesso. 
-In queste classi sono implementate le query per l'inserimento, 
+In queste classi sono implementate le queries per l'inserimento, 
 la modifica e l'eliminazione dei dati e gestiscono in autonomia 
 le eccezioni che possono verificarsi durante l'interazione
 con il database.
 \paragraph{PreparedStatement}
-Tutte le query sono implementate utilizzando la classe
+Tutte le queries sono implementate utilizzando la classe
 \texttt{PreparedStatement} per garantire la sicurezza
 dell'applicazione, prevenire attacchi di tipo SQL Injection, 
-migliorare le performance attraverso caching dell query compilate
+migliorare le performance attraverso caching delle queries compilate
 e semplificarne la scrittura.
 
 \subsection{Server Services}

@@ -40,10 +40,10 @@ coordinate nell'entità \textit{Address} per una migliore gestione.
 e un \textit{User} per mostrare i ristoranti più vicini all'utente.
 Attribuendo questo campo ad entrambe le entità si è potuto gestire 
 in modo efficace questo calcolo evitando ridondanze e ulteriori 
-query al database.
+queries al database.
 \subsubsection{Schema}
-Infine si sono elencate le tabelle e i relativi attributi 
-per avere un visione immediata delle tabelle che compongono il database.
+Infine, si sono elencate le tabelle e i relativi attributi 
+per avere una visione immediata delle tabelle che compongono il database.
 \begin{itemize}
     \item \textbf{\hyperref[sec:addresses]{addresses}} (\underline{address\_id}, country, city, street, house\_number, latitude, longitude)
     \item \textbf{\hyperref[sec:users]{users}} (\underline{username}, h\_password, name, surname, birth\_date, role, address\_id\textsuperscript{\hyperref[sec:addresses]{addresses}})
@@ -119,7 +119,7 @@ Gli attributi sono:
 \end{itemize}
 Il campo \textit{r\_owner} è una chiave esterna che fa riferimento
 alla tabella \textit{users} e rappresenta il proprietario del ristorante.
-In caso di moifica di \textit{username} dell'utente, si aggiornerà
+In caso di modifica di \textit{username} dell'utente, si aggiornerà
 il campo \textit{r\_owner}, in caso di cancellazione dell'utente 
 verrà cancellato anche il ristorante.\\
 Il campo \textit{address\_id} è una chiave esterna che fa riferimento
@@ -133,7 +133,7 @@ prezzo medio sia un numero positivo.
 \subsubsection{Favorites}
 \label{sec:favorites}
 La tabella \textit{favorites} server a gestire i 
-ristorante preferiti dagli utenti.\\
+ristoranti preferiti dagli utenti.\\
 Gli attributi sono:
 \begin{itemize}
     \item \textbf{username}: identificativo dell'utente
