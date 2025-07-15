@@ -1,0 +1,61 @@
+\section{Scelte implementative}
+
+\subsection{Patterns}
+Il progetto è stato sviluppato seguendo alcuni design patterns
+per garantire una struttura chiara e manutenibile.\\
+I principali
+design patterns utilizzati sono:
+\begin{itemize}
+    \item \textbf{Singleton}: Utilizzato per garantire che alcune 
+    classi abbiano un'unica istanza durante l'esecuzione dell'applicazione.
+    \item \textbf{Data Transfer Object (DTO)}: Utilizzato per
+    trasferire dati tra il client e il server in modo semplice e
+    senza logica di business.
+    \item \textbf{Model-View-Controller (MVC)}: Utilizzato per
+    separare la logica di presentazione dalla logica di business
+    e dalla gestione dei dati, in particolare nel client.
+    \item \textbf{Data Access Object (DAO)}: Utilizzato per isolare
+    la logica di persistenza dei dati dal resto dell'applicazione,
+    semplificando l'interazione con il database.
+\end{itemize}
+
+\subsection{Algoritmi e Formule}
+
+\subsection{\href{https://github.com/p-h-c/phc-winner-argon2}{Argon2}}
+Per la gestione delle password degli utenti, si è scelto di utilizzare
+l'algoritmo di hashing \href{https://github.com/p-h-c/phc-winner-argon2}{\textit{Argon2}} come consigliato dalla
+\href{https://owasp.org}{OWASP}.
+Questo algoritmo è stato scelto per la sua resistenza agli attacchi 
+di tipo brute-force, anche parallelizzati, e per la sua capacità di essere configurabile
+in termini di memoria e tempo di esecuzione, rendendolo estremamente flessibile.\\
+La sua implementazione prevede che quando un utente si registri, 
+la sua password venga hashata prima di essere iserita nel database;
+mentre quando un utente effettua il login, la password inserita
+venga anch'essa hashata e confrontata con quella presente nel database
+corrispondente allo username fornito.
+
+\subsection{\href{https://rosettacode.org/wiki/Haversine_formula}{Formula di Haversine}}
+Per calcolare la distanza tra due punti sulla superficie terrestre
+si è utilizzata la \href{https://rosettacode.org/wiki/Haversine_formula}{\textit{Formula di Haversine}} sia nel client, 
+implementandola in Java che nel server scrivendola in SQL.
+In particolare, è stata usata per calcolare la distanza tra 
+l'utente e i ristoranti.
+
+\begin{align*}
+a &= \sin^2\left(\frac{\Delta\varphi}{2}\right) + \cos(\varphi_1) \cdot \cos(\varphi_2) \cdot \sin^2\left(\frac{\Delta\lambda}{2}\right) \\
+c &= 2 \cdot \mathrm{atan2}\left(\sqrt{a}, \sqrt{1 - a}\right) \\
+d &= R \cdot c
+\end{align*}
+
+\subsection*{Legenda}
+
+\begin{itemize}
+  \item $\varphi_1$, $\varphi_2$ - latitudini dei due punti (in radianti)
+  \item $\lambda_1$, $\lambda_2$ - longitudini dei due punti (in radianti)
+  \item $\Delta\varphi = \varphi_2 - \varphi_1$ - differenza di latitudine
+  \item $\Delta\lambda = \lambda_2 - \lambda_1$ - differenza di longitudine
+  \item $R$ - raggio della Terra (approssimativamente $6.371$ km)
+  \item $a$ - valore intermedio usato per calcolare la distanza
+  \item $c$ - angolo centrale tra i due punti (in radianti)
+  \item $d$ - distanza tra i due punti lungo la superficie terrestre (in km)
+\end{itemize}

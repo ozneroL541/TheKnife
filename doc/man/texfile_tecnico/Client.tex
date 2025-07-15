@@ -3,6 +3,12 @@ Il package \texttt{Client} contiene le classi necessarie per
 la gestione del client, che si occupa di interagire con l'utente 
 attraverso la Graphical User Interface e di utilizzare i 
 servizi offerti dal server tramite JavaRMI.
+L'architettura client implementa il pattern MVC dove:
+\begin{itemize}
+    \item \textbf{Model}: Rappresentato dai DTO ricevuti dai servizi RMI
+    \item \textbf{View}: Definita nei file FXML con componenti JavaFX
+    \item \textbf{Controller}: Classi Java che gestiscono la logica di presentazione e l'interazione utente
+\end{itemize}
 
 \subsection{ClientTK}
 La classe \texttt{ClientTK} contiene il metodo \texttt{main}
@@ -37,3 +43,56 @@ dei ristoranti in quanto, contenendo le coordinate dell'utente,
 permette di trovare i ristoranti in base alla loro distanza.
 
 \subsection{User Interface}
+L'interfaccia grafica è stata interamente realizzata tramite 
+il framework JavaFX.
+Essa è divisa in più viste, ognuna delle quali è definita 
+tramite un file \textit{FXML} presente nella cartella 
+\textit{TheKnife/client/src/main/resources/it/uninsubria/controller/}.
+Ogni componente grafico è nominato come \textit{name-view.fxml} ed 
+è corrisposta da una classe Java nominata \textit{NameController.java}
+che ne gestisce gli eventi e le interazioni con l'utente.\\
+I componenti importanti sono:
+\begin{itemize}
+    \item  \textbf{AddReply} finestra per l'aggiunta di una risposta ad una recensione (visibile solo dai ristoratori)
+    \item  \textbf{AddRestaurant} fiinestra per l'aggiunta di un ristorante (visibile solo dai ristoratori)
+    \item  \textbf{AddReview} finestra per l'aggiunta di una recensione (visibile solo dagli utenti registrati)
+    \item  \textbf{Login} finestra per il login
+    \item  \textbf{MyArea} finestra per la gestione dell'area personale dell'utente (visibile solo agli utenti registrati)
+    \item  \textbf{Registration} finestra per la registrazione di un nuovo utente
+    \item  \textbf{RestaurantInfo} finestra per la visualizzazione delle informazioni relative ad un ristorante
+    \item  \textbf{Search} finestra per la ricerca dei ristoranti
+\end{itemize}
+
+\subsubsection{Components}
+Nella cartella 
+\textit{TheKnife/client/src/main/java/it/uninsubria/controller/ui\_components/}
+sono presenti dei componenti grafici riutilizzabili in più finestre.\\
+Essi sono:
+\begin{itemize}
+    \item \textbf{GenericResultsComponent} componente generico (ristorante o recensione) per mostrare una lista di \textit{cards} in modo che si possa scorrere
+    \item \textbf{RestaurantCardComponent} componente per mostrare i ristoranti come \textit{cards} clickabili
+    \item \textbf{ReviewCardComponent} componente per mostrare le recensioni come \textit{cards} clickabili
+\end{itemize}
+
+\subsection{Util}
+Il package \texttt{utilclient} contiene la classe \texttt{UtilClient} che
+che fornisce un metodo per il calcolo della distanza tra due coordinate
+geografiche. 
+Questo metodo è utilizzato in vari punti del client.
+
+\begin{minted}{java}
+public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    /** Radius of the Earth in kilometers */
+    final int EARTH_RADIUS = 6371;
+    /** Latitude distances in radians */
+    double latDistance = Math.toRadians(lat2 - lat1);
+    /** Longitude distances in radians */
+    double lonDistance = Math.toRadians(lon2 - lon1);
+    /* Haversine Formula */
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return EARTH_RADIUS * c;
+}
+\end{minted}

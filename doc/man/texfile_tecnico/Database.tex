@@ -1,5 +1,5 @@
 \section{Database}
-Si è scelto di utilizzare un database relazionale per 
+Si è deciso di utilizzare un database relazionale per 
 la gestione dei dati dell'applicazione.
 Come database è stato scelto PostgreSQL.
 
@@ -11,7 +11,7 @@ necessario gestire.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{images/ER-base.png}
-  \caption{Diagramma ER}
+  \caption{Diagramma E-R}
   \label{fig:er-diagram}
 \end{figure}
 Come si evince dal diagramma l'entità principale 
@@ -29,7 +29,7 @@ per normalizzare le tabelle.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{images/ER-refactored.png}
-  \caption{Diagramma ER Normalizzato}
+  \caption{Diagramma E-R Normalizzato}
   \label{fig:er-diagram2}
 \end{figure}
 Dopo questa rielaborazione le coordinate da attributo derivato 
@@ -81,8 +81,8 @@ La tabella \textit{users} contiene gli utenti registrati
 nell'applicazione.\\
 Gli attributi sono:
 \begin{itemize}
-    \item \textbf{username}: identificativo univoco dell'utente
-    \item \textbf{h\_password}: password in hash
+    \item \textbf{username}: nome utente univoco
+    \item \textbf{h\_password}: password cifrata con algoritmo di hashing
     \item \textbf{name}: nome
     \item \textbf{surname}: cognome
     \item \textbf{birth\_date}: data di nascita
@@ -108,7 +108,7 @@ La tabella \textit{restaurants} contiene i ristoranti creati
 dai ristoratori.\\
 Gli attributi sono:
 \begin{itemize}
-    \item \textbf{restaurant\_id}: identificativo univoco del ristorante
+    \item \textbf{restaurant\_id}: codice univoco del ristorante
     \item \textbf{r\_owner}: proprietario del ristorante (username dell'utente)
     \item \textbf{r\_name}: nome del ristorante
     \item \textbf{avg\_price}: prezzo medio del ristorante inserito dal ristoratore

@@ -14,7 +14,7 @@ principali interazioni tra gli utenti e il sistema.
 \end{figure}
 Basandosi sul diagramma si è poi proceduto ad articolare le 
 singole funzionalità in modo da poterle implementare
-in modo modulare attraverso la Progettazione Orientata agli Oggetti.
+in maniera modulare attraverso la Progettazione Orientata agli Oggetti.
 
 \subsection{Class Diagram}
 Al fine di rappresentare le classi e le loro relazioni, dallo 
@@ -28,7 +28,10 @@ racchiudere le classi principali del sistema.
 \end{figure}
 Il diagramma è stato poi utilizzato per implementare le classi 
 in Java, seguendo le relazioni e le associazioni
-indicate.
+indicate.\\
+In particolare le classi e i metodi principali sono stati inseriti 
+nel modulo \textit{common} e utilizzati come base fondante del progetto 
+per una corretta interazione tra client e server.
 
 \subsection{Architettura del Sistema}
 Il sistema è basato su un'architettura Client-Server.\\
@@ -46,17 +49,23 @@ facilitare l'implementazione delle funzionalità.
 Per questa ragione il progetto è suddiviso in tre moduli principali:
 \begin{itemize}
   \item \textbf{client}: implementa il client e la sua interfaccia grafica
-  \item \textbf{common}: contiene le interfacce comuni e le classi di utilità
-  \item \textbf{server}: implementa il server e le funzionalità di gestione dei dati
+  \item \textbf{common}: contiene le classi e le interfacce comuni per il trasferimento dei dati tra client e server
+  \item \textbf{server}: implementa il server e gestisce la connession con il database
 \end{itemize}
 
 \subsection{Flusso delle Informazioni}
-Nel modulo \textit{common} sono definite le interfacce tramite il 
-pattern Data Transfer Object (DTO), che permettono di trasferire
+Nel modulo \textit{common} sono definite le interfacce comuni e le 
+classi serializzabili definite con il pattern 
+Data Transfer Object (DTO), che permettono di trasferire
 i dati tra client e server in modo strutturato.\\
 Il trasferimento di informazione avviene attraverso le interfacce 
-definite dai DTO dal client al server, l'elaborazione viene poi presa 
-in carico dagli oggetti Data Access Object (DAO) che
+definite nel package \textit{common} implementate nel server e 
+accessibili al client tramite il Registry.
+I DTO serializzabili possono essere passati come argomento ai 
+metodi invocati.
+L'elaborazione viene presa 
+in carico dagli oggetti Data Access Object (DAO) 
+presenti sul server che
 gestiscono l'interazione con il database.\\
 Il server, una volta ricevuti i dati, li elabora e restituisce
 le risposte al client, che le visualizza nell'interfaccia grafica.\\

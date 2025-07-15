@@ -24,7 +24,8 @@ chiedendo le credenziali all'utente da riga di comando.
 \subsection{Data Access Object}
 Il package \texttt{dao} contiene le classi che implementano 
 il pattern Data Access Object (DAO) per l'interazione
-con il database. Queste classi sono responsabili dell'interazione 
+con il database isolando la logica di persistenza.
+Queste classi sono responsabili dell'interazione 
 del database con l'applicazione.
 Le classi implementate sono le seguenti:
 \begin{itemize}
@@ -40,6 +41,12 @@ In queste classi sono implementate le query per l'inserimento,
 la modifica e l'eliminazione dei dati e gestiscono in autonomia 
 le eccezioni che possono verificarsi durante l'interazione
 con il database.
+\paragraph{PreparedStatement}
+Tutte le query sono implementate utilizzando la classe
+\texttt{PreparedStatement} per garantire la sicurezza
+dell'applicazione, prevenire attacchi di tipo SQL Injection, 
+migliorare le performance attraverso caching dell query compilate
+e semplificarne la scrittura.
 
 \subsection{Server Services}
 Il package \texttt{server\_services} contiene le classi che implementano
@@ -50,7 +57,7 @@ I metodi delle classi garantiscono una corretta gestione della
 concorrenza e utilizzano le classi DAO per interagire con il database.
 Le classi implementate sono le seguenti:
 \begin{itemize}
-    \item \texttt{RestaurantServiceImpl.java} implementa \texttt{RestaurantService}
-    \item \texttt{ReviewServiceImpl.java} implementa \texttt{ReviewService}
-    \item \texttt{UserServiceImpl.java} implementa \texttt{UserService}
+    \item \texttt{RestaurantServiceImpl.java} implementa \texttt{\hyperref[sec:restaurantservice]{RestaurantService}}
+    \item \texttt{ReviewServiceImpl.java} implementa \texttt{\hyperref[sec:reviewservice]{ReviewService}}
+    \item \texttt{UserServiceImpl.java} implementa \texttt{\hyperref[sec:userservice]{UserService}}
 \end{itemize}
